@@ -5,11 +5,31 @@ A modular command-line Personal Finance Manager built with Python that enables u
 ---
 
 ![Python](https://img.shields.io/badge/Python-3.13-blue)
-![Pytest](https://img.shields.io/badge/Tests-75%20Passed-success)
+![Pytest](https://img.shields.io/badge/Pytest-75%20Tests%20Passed-brightgreen)
 ![Architecture](https://img.shields.io/badge/Architecture-Modular-green)
 ![Storage](https://img.shields.io/badge/Storage-CSV%20%7C%20JSON-orange)
+![License](https://img.shields.io/badge/License-MIT-blue)
 
 ---
+## Quick Start
+
+Get the application running in a few simple steps.
+
+```bash
+git clone https://github.com/madhurjabhattacharjee479-arch/personal-finance-manager.git
+cd personal-finance-manager
+pip install -r requirements.txt
+python main.py
+```
+
+## My overall assessment
+
+When we started, this was a coursework-style project. Through the refinements—clean documentation, proper testing, architecture diagrams, screenshots, Git hygiene, and a polished README—you've turned it into something that works well as a portfolio piece.
+
+I would rate it around **9.5/10** for an undergraduate portfolio project.
+
+The next step shouldn't be polishing this indefinitely. Put it on GitHub, include it on your resume, and start building a second project that's more advanced—something involving cybersecurity, networking, cloud security, or AI. Having two or three strong, varied projects will make a much bigger difference than trying to squeeze another 0.3 points out of this one.
+
 
 ## Overview
 
@@ -17,7 +37,7 @@ Personal Finance Manager is a modular, menu-driven command-line application deve
 
 The application follows an object-oriented and modular architecture, separating responsibilities into independent components such as expense management, budgeting, reporting, visualisation, export, configuration, backup, and dashboard modules. This design improves maintainability, scalability, and testability.
 
-The project stores application data using CSV and JSON files while providing automatic persistence, backup, and restoration mechanisms to ensure data integrity.
+Application data is persisted using CSV and JSON storage with built-in backup and restore functionality to maintain data integrity.
 
 ---
 ## Table of Contents
@@ -287,25 +307,25 @@ personal-finance-manager/
 
 ## Installation
 
-Clone the repository.
+### 1. Clone the repository
 
 ```bash
 git clone https://github.com/madhurjabhattacharjee479-arch/personal-finance-manager.git
 ```
 
-Navigate to the project directory.
+### 2. Navigate to the project directory
 
 ```bash
 cd personal-finance-manager
 ```
 
-Install dependencies.
+### 3. Install the required dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
-Run the application.
+### 4. Run the application
 
 ```bash
 python main.py
@@ -332,7 +352,12 @@ The automated test suite covers:
 The current automated test suite contains **75 tests**, all of which pass successfully.
 
 ```text
-75 passed
+============================= test session starts =============================
+collected 75 items
+
+75 passed in 0.30s
+```
+
 Run the complete test suite using:
 
 ```bash
@@ -341,6 +366,7 @@ pytest
 
 The test suite is designed to verify core application functionality and help prevent regressions during future development.
 
+---
 
 ## Performance Analysis
 
@@ -355,56 +381,59 @@ The application primarily uses in-memory lists and file-based persistence. The f
 | Delete Expense | O(n) | Searches for and removes the target expense |
 | Category Report | O(n) | Processes expense records to aggregate category totals |
 | Monthly Report | O(n) | Processes expense records for the requested month |
-| Export | O(n) | Iterates through expense records to generate the export |
+| Export | O(n) | Iterates through expense records to generate export files |
 | Backup | O(f) | Copies each available data file, where *f* is the number of files |
 
 The application is designed for small to medium-sized personal datasets. For significantly larger datasets, database-backed storage and indexed queries could improve search and reporting performance.
 
-## Design Decisions
+---
 
-The following design decisions were made to improve maintainability, reliability, and ease of development.
+## Design Decisions
 
 ### Modular Architecture
 
-The application is divided into independent modules responsible for specific functionality, including expense management, budgeting, reporting, dashboard generation, data visualisation, exporting, configuration, and backup operations.
+The application is divided into independent modules responsible for expense management, budgeting, reporting, dashboard generation, data visualisation, exporting, configuration, and backup operations.
 
-This separation of responsibilities makes the codebase easier to maintain, test, and extend.
+This separation of responsibilities improves maintainability, scalability, and testability.
 
 ### Object-Oriented Design
 
-Core entities such as expenses and budgets are represented using dedicated classes. This approach improves code organisation, encapsulation, and reusability.
+Core entities such as **Expense** and **Budget** are represented using dedicated classes, improving encapsulation, code organisation, and reusability.
 
 ### File-Based Persistence
 
-Application data is stored using CSV and JSON files rather than a database. This keeps the application lightweight and portable while making the underlying data storage easy to inspect and understand.
+Application data is stored using CSV and JSON files rather than a database. This keeps the application lightweight, portable, and easy to inspect.
 
-For larger-scale deployments, database-backed storage could be introduced in a future version.
+Future versions could integrate SQLite or PostgreSQL for larger datasets.
 
 ### Input Validation
 
-User input is validated before processing to reduce invalid data and improve application stability.
+User input is validated before processing to improve application reliability and reduce invalid data.
 
 ### Automated Testing
 
-Pytest is used to test core application functionality and help identify regressions during development.
+Pytest is used to verify application behaviour and reduce regressions during future development.
 
 ### Data Visualisation
 
-Matplotlib is used to generate category-wise and monthly spending charts. The generated charts are saved as image files for later viewing and reporting.
+Matplotlib is used to generate category-wise pie charts and monthly spending bar charts, which are saved as image files.
+
+---
 
 ## Limitations
 
 The current implementation has the following limitations:
 
-- Application data is stored locally using CSV and JSON files.
-- The application supports a single user profile.
-- No authentication or user access control is implemented.
-- Backup files are not encrypted or password protected.
-- Charts are generated as static image files rather than interactive visualisations.
-- Search operations use linear scans of stored records.
-- The application does not currently provide cloud synchronisation.
-- The application is designed primarily for local, single-user use rather than multi-user or distributed environments.
+- Data is stored locally using CSV and JSON files.
+- Single-user application.
+- No authentication or user access control.
+- Backup files are not encrypted.
+- Charts are static image files.
+- Search operations use linear scans.
+- No cloud synchronisation.
+- Designed primarily for local personal finance management.
 
+---
 
 ## Future Enhancements
 
@@ -414,21 +443,23 @@ Potential future improvements include:
 - User authentication and profile management
 - Receipt OCR using Optical Character Recognition
 - Interactive graphical user interface (GUI)
-- REST API for external integrations
+- REST API development
 - Cloud synchronisation
-- Machine learning-based expense prediction and spending trend analysis
-- Advanced financial forecasting
-- Automated recurring expense management
-- Docker containerization
+- Machine learning-based expense prediction
+- Financial forecasting
+- Recurring expense automation
+- Docker containerisation
 - Continuous Integration using GitHub Actions
 
+---
 
 ## Version History
 
 | Version | Release | Description |
 |---------|---------|-------------|
-| v1.0.0 | Initial Release | Expense management, budgeting, reporting, charts, dashboard, export, backup & restore, automated testing |
+| **v1.0.0** | Initial Release | Expense management, budgeting, reporting, dashboard, charts, export, backup & restore, automated testing |
 
+---
 
 ## Contributing
 
@@ -438,19 +469,23 @@ To contribute:
 
 1. Fork the repository.
 2. Create a new feature or bug-fix branch.
-3. Make your changes while following the existing project structure and coding conventions.
-4. Add or update tests for any modified or newly introduced functionality.
-5. Run the complete test suite and ensure that all tests pass.
-6. Commit your changes using a clear and descriptive commit message.
-7. Push your branch to your forked repository.
-8. Open a Pull Request with a clear description of the changes and their purpose.
+3. Implement your changes.
+4. Add or update tests where appropriate.
+5. Run the complete test suite.
 
-Before submitting a Pull Request, please ensure that:
+```bash
+pytest
+```
 
-- Existing functionality has not been unintentionally broken.
-- Relevant tests have been added or updated.
-- All automated tests pass successfully.
-- The code follows the existing project structure and style.
+6. Ensure:
+   - Existing functionality has not been unintentionally broken.
+   - Relevant tests have been added or updated.
+   - All automated tests pass successfully.
+   - The code follows the project's coding style.
+
+7. Submit a Pull Request.
+
+---
 
 ## Author
 
@@ -462,13 +497,19 @@ Institute of Advance Education and Research (IAER)
 
 Maulana Abul Kalam Azad University of Technology (MAKAUT)
 
-GitHub: https://github.com/madhurjabhattacharjee479-arch
+**GitHub:**  
+https://github.com/madhurjabhattacharjee479-arch
 
-LinkedIn: https://www.linkedin.com/in/madhurja-bhattacharjee-623782322 
+**LinkedIn:**  
+https://www.linkedin.com/in/madhurja-bhattacharjee-623782322
 
+---
 
 ## License
 
-This project is licensed under the MIT License.
+This project is licensed under the **MIT License**.
 
 See the [LICENSE](LICENSE) file for the complete license text.
+
+
+Improve README documentation
