@@ -62,9 +62,7 @@ def category_summary(expenses):
         summary[category]["total"] += expense.amount
 
     for category, data in summary.items():
-        data["average"] = (
-            data["total"] / data["count"]
-        ).quantize(Decimal("0.01"))
+        data["average"] = (data["total"] / data["count"]).quantize(Decimal("0.01"))
 
     return dict(summary)
 
@@ -85,9 +83,7 @@ def monthly_summary(expenses, year, month):
     matching_expenses = [
         expense
         for expense in expenses
-        if expense.date.startswith(
-            f"{year:04d}-{month:02d}"
-        )
+        if expense.date.startswith(f"{year:04d}-{month:02d}")
     ]
 
     total = calculate_total(matching_expenses)

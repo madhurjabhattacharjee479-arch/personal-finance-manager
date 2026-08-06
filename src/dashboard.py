@@ -42,19 +42,13 @@ def dashboard_menu(expenses, budget_manager):
 
         elif choice == "2":
 
-            generate_category_pie_chart(
-                expenses
-            )
+            generate_category_pie_chart(expenses)
 
         elif choice == "3":
 
             try:
 
-                year = int(
-                    input(
-                        "Enter year (YYYY): "
-                    ).strip()
-                )
+                year = int(input("Enter year (YYYY): ").strip())
 
                 generate_monthly_bar_chart(
                     expenses,
@@ -63,23 +57,17 @@ def dashboard_menu(expenses, budget_manager):
 
             except ValueError:
 
-                print(
-                    "\n❌ Please enter a valid year."
-                )
+                print("\n❌ Please enter a valid year.")
 
         elif choice == "4":
 
-            print(
-                "\nReturning to Main Menu..."
-            )
+            print("\nReturning to Main Menu...")
 
             break
 
         else:
 
-            print(
-                "\n❌ Invalid choice."
-            )
+            print("\n❌ Invalid choice.")
 
 
 def get_dashboard(expenses, budget_manager):
@@ -96,8 +84,7 @@ def get_dashboard(expenses, budget_manager):
     if expenses:
 
         dashboard["average_expense"] = (
-            dashboard["total_spent"]
-            / dashboard["total_expenses"]
+            dashboard["total_spent"] / dashboard["total_expenses"]
         )
 
     else:
@@ -127,9 +114,7 @@ def get_dashboard(expenses, budget_manager):
 
         dashboard["top_category"] = None
 
-    dashboard["budgets"] = len(
-        budget_manager.get_all_budgets()
-    )
+    dashboard["budgets"] = len(budget_manager.get_all_budgets())
 
     return dashboard
 
@@ -148,30 +133,15 @@ def display_dashboard(expenses, budget_manager):
     print("             FINANCE DASHBOARD")
     print("=" * 50)
 
-    print(
-        f"Total Expenses : "
-        f"{dashboard['total_expenses']}"
-    )
+    print(f"Total Expenses : " f"{dashboard['total_expenses']}")
 
-    print(
-        f"Total Spent    : "
-        f"{format_money(dashboard['total_spent'])}"
-    )
+    print(f"Total Spent    : " f"{format_money(dashboard['total_spent'])}")
 
-    print(
-        f"Average Expense: "
-        f"{format_money(dashboard['average_expense'])}"
-    )
+    print(f"Average Expense: " f"{format_money(dashboard['average_expense'])}")
 
-    print(
-        f"Categories     : "
-        f"{dashboard['category_count']}"
-    )
+    print(f"Categories     : " f"{dashboard['category_count']}")
 
-    print(
-        f"Budgets Set    : "
-        f"{dashboard['budgets']}"
-    )
+    print(f"Budgets Set    : " f"{dashboard['budgets']}")
 
     print("-" * 50)
 
@@ -195,14 +165,9 @@ def display_dashboard(expenses, budget_manager):
 
         print("Top Spending Category")
 
-        print(
-            f"   {dashboard['top_category']['name']}"
-        )
+        print(f"   {dashboard['top_category']['name']}")
 
-        print(
-            f"   Amount : "
-            f"{format_money(dashboard['top_category']['amount'])}"
-        )
+        print(f"   Amount : " f"{format_money(dashboard['top_category']['amount'])}")
 
     else:
 
@@ -224,60 +189,36 @@ def display_dashboard(expenses, budget_manager):
 
             print("CURRENT MONTH BUDGET")
 
-            print(
-                f"Budget      : "
-                f"{format_money(status['budget'])}"
-            )
+            print(f"Budget      : " f"{format_money(status['budget'])}")
 
-            print(
-                f"Spent       : "
-                f"{format_money(status['spent'])}"
-            )
+            print(f"Spent       : " f"{format_money(status['spent'])}")
 
-            print(
-                f"Remaining   : "
-                f"{format_money(status['remaining'])}"
-            )
+            print(f"Remaining   : " f"{format_money(status['remaining'])}")
 
-            print(
-                f"Utilisation : "
-                f"{status['utilisation']:.2f}%"
-            )
+            print(f"Utilisation : " f"{status['utilisation']:.2f}%")
 
             if status["status"] == "OK":
 
-                print(
-                    "Status      : ✅ Within Budget"
-                )
+                print("Status      : ✅ Within Budget")
 
             elif status["status"] == "WARNING":
 
-                print(
-                    "Status      : ⚠ Near Budget Limit"
-                )
+                print("Status      : ⚠ Near Budget Limit")
 
             elif status["status"] == "EXCEEDED":
 
-                print(
-                    "Status      : 🚨 Budget Exceeded"
-                )
+                print("Status      : 🚨 Budget Exceeded")
 
             else:
 
-                print(
-                    f"Status      : {status['status']}"
-                )
+                print(f"Status      : {status['status']}")
 
         else:
 
-            print(
-                "No budget set for the current month."
-            )
+            print("No budget set for the current month.")
 
     except Exception as error:
 
-        print(
-            f"Unable to load budget status: {error}"
-        )
+        print(f"Unable to load budget status: {error}")
 
     print("=" * 50)

@@ -1,4 +1,3 @@
-
 from decimal import Decimal
 
 import pytest
@@ -10,10 +9,10 @@ from src.utils import (
     validate_description,
 )
 
-
 # ========================================
 # AMOUNT VALIDATION TESTS
 # ========================================
+
 
 def test_validate_amount_valid():
     assert validate_amount("45.50") == Decimal("45.50")
@@ -39,6 +38,7 @@ def test_validate_amount_negative():
 # DATE VALIDATION TESTS
 # ========================================
 
+
 def test_validate_date_valid():
     assert validate_date("2026-07-26") == "2026-07-26"
 
@@ -56,6 +56,7 @@ def test_validate_date_invalid_calendar_date():
 # ========================================
 # CATEGORY VALIDATION TESTS
 # ========================================
+
 
 def test_validate_category_lowercase():
     assert validate_category("food") == "Food"
@@ -83,11 +84,9 @@ def test_validate_category_invalid():
 # DESCRIPTION VALIDATION TESTS
 # ========================================
 
+
 def test_validate_description_valid():
-    assert (
-        validate_description("  Lunch at cafe  ")
-        == "Lunch at cafe"
-    )
+    assert validate_description("  Lunch at cafe  ") == "Lunch at cafe"
 
 
 def test_validate_description_empty():

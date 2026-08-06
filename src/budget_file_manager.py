@@ -4,7 +4,6 @@ from decimal import Decimal
 
 from src.budget import Budget
 
-
 BUDGETS_FILE = Path("data/budgets.json")
 
 
@@ -24,16 +23,10 @@ def save_budgets(budgets, filename=BUDGETS_FILE):
 
     for budget in budgets:
         if not isinstance(budget, Budget):
-            raise TypeError(
-                f"Expected Budget object, "
-                f"got {type(budget).__name__}."
-            )
+            raise TypeError(f"Expected Budget object, " f"got {type(budget).__name__}.")
 
     try:
-        file_path.parent.mkdir(
-            parents=True,
-            exist_ok=True
-        )
+        file_path.parent.mkdir(parents=True, exist_ok=True)
 
         budget_data = []
 
@@ -46,20 +39,11 @@ def save_budgets(budgets, filename=BUDGETS_FILE):
                 }
             )
 
-        with file_path.open(
-            "w",
-            encoding="utf-8"
-        ) as json_file:
-            json.dump(
-                budget_data,
-                json_file,
-                indent=4
-            )
+        with file_path.open("w", encoding="utf-8") as json_file:
+            json.dump(budget_data, json_file, indent=4)
 
     except OSError as error:
-        raise OSError(
-            f"Unable to save budgets to '{file_path}'."
-        ) from error
+        raise OSError(f"Unable to save budgets to '{file_path}'.") from error
 
 
 def load_budgets(filename=BUDGETS_FILE):
@@ -81,61 +65,41 @@ def load_budgets(filename=BUDGETS_FILE):
         return []
 
     try:
-        with file_path.open(
-            "r",
-            encoding="utf-8"
-        ) as json_file:
+        with file_path.open("r", encoding="utf-8") as json_file:
             budget_data = json.load(json_file)
 
     except json.JSONDecodeError as error:
-        raise ValueError(
-            f"Invalid JSON data in '{file_path}'."
-        ) from error
+        raise ValueError(f"Invalid JSON data in '{file_path}'.") from error
 
     except OSError as error:
-        raise OSError(
-            f"Unable to read budgets from '{file_path}'."
-        ) from error
+        raise OSError(f"Unable to read budgets from '{file_path}'.") from error
 
     if not isinstance(budget_data, list):
-        raise ValueError(
-            "Budget data must be stored as a JSON list."
-        )
+        raise ValueError("Budget data must be stored as a JSON list.")
 
     budgets = []
 
-    for index, data in enumerate(
-        budget_data,
-        start=1
-    ):
+    for index, data in enumerate(budget_data, start=1):
         if not isinstance(data, dict):
-            raise ValueError(
-                f"Invalid budget data at item {index}."
-            )
+            raise ValueError(f"Invalid budget data at item {index}.")
 
         try:
             month = data["month"]
             year = data["year"]
             amount = Decimal(str(data["amount"]))
 
-            budget = Budget(
-                month=month,
-                year=year,
-                amount=amount
-            )
+            budget = Budget(month=month, year=year, amount=amount)
 
             budgets.append(budget)
 
         except KeyError as error:
             raise ValueError(
-                f"Missing required budget field "
-                f"at item {index}: {error}"
+                f"Missing required budget field " f"at item {index}: {error}"
             ) from error
 
         except (ValueError, TypeError) as error:
             raise ValueError(
-                f"Invalid budget data at item {index}: "
-                f"{error}"
+                f"Invalid budget data at item {index}: " f"{error}"
             ) from error
 
     return budgets

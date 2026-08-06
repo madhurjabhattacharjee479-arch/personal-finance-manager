@@ -39,7 +39,9 @@ DATA_FILE = Path("data/expenses.csv")
 BUDGETS_FILE = Path("data/budgets.json")
 
 from src.file_manager import save_expenses
+
 DATA_FILE = Path("data/expenses.csv")
+
 
 def get_valid_input(prompt, validation_function):
     """
@@ -60,6 +62,8 @@ def get_valid_input(prompt, validation_function):
         except ValueError as error:
             print(f"❌ Invalid input: {error}")
             print("Please try again.\n")
+
+
 def add_expense(expenses, budget_manager):
     """
     Collect expense details from the user, add a new Expense,
@@ -120,10 +124,7 @@ def add_expense(expenses, budget_manager):
     # ----------------------------------------
 
     try:
-        expense_date = datetime.strptime(
-            expense.date,
-            "%Y-%m-%d"
-        )
+        expense_date = datetime.strptime(expense.date, "%Y-%m-%d")
 
         year = expense_date.year
         month = expense_date.month
@@ -137,62 +138,39 @@ def add_expense(expenses, budget_manager):
         if status is None:
             return
 
-        print(
-            f"\n=== BUDGET STATUS: "
-            f"{year:04d}-{month:02d} ==="
-        )
+        print(f"\n=== BUDGET STATUS: " f"{year:04d}-{month:02d} ===")
 
-        print(
-            f"Budget: "
-            f"{format_money(status['budget'])}"
-        )
+        print(f"Budget: " f"{format_money(status['budget'])}")
 
-        print(
-            f"Spent: "
-            f"{format_money(status['spent'])}"
-        )
+        print(f"Spent: " f"{format_money(status['spent'])}")
 
-        print(
-            f"Remaining: "
-            f"{format_money(status['remaining'])}"
-        )
+        print(f"Remaining: " f"{format_money(status['remaining'])}")
 
-        print(
-            f"Budget utilisation: "
-            f"{status['utilisation']:.2f}%"
-        )
+        print(f"Budget utilisation: " f"{status['utilisation']:.2f}%")
 
         if status["status"] == "EXCEEDED":
 
             print("\n🚨 BUDGET EXCEEDED!")
 
             print(
-                f"You are over budget by "
-                f"{format_money(abs(status['remaining']))}."
+                f"You are over budget by " f"{format_money(abs(status['remaining']))}."
             )
 
         elif status["status"] == "WARNING":
 
             print("\n⚠️ BUDGET WARNING!")
 
-            print(
-                "You have used 80% or more "
-                "of your monthly budget."
-            )
+            print("You have used 80% or more " "of your monthly budget.")
 
         else:
 
-            print(
-                "\n✅ Your spending is within "
-                "your monthly budget."
-            )
+            print("\n✅ Your spending is within " "your monthly budget.")
 
     except (ValueError, KeyError, TypeError) as error:
 
-        print(
-            f"\n⚠️ Unable to check budget status: "
-            f"{error}"
-        )
+        print(f"\n⚠️ Unable to check budget status: " f"{error}")
+
+
 def view_expenses(expenses):
     """
     Display all expenses in a numbered list.
@@ -205,7 +183,8 @@ def view_expenses(expenses):
 
     for index, expense in enumerate(expenses, start=1):
         print(f"{index}. {expense}")
-        
+
+
 def search_expenses(expenses):
     """
     Search expenses by category, description, or date.
@@ -261,7 +240,8 @@ def search_expenses(expenses):
         print(f"{index}. {expense}")
 
     print(f"\nFound {len(matches)} matching expense(s).")
-    
+
+
 def delete_expense(expenses):
     """
     Delete an expense selected by the user.
@@ -293,8 +273,7 @@ def delete_expense(expenses):
     while True:
 
         choice = input(
-            "\nEnter the expense number to delete "
-            "(or 0 to cancel): "
+            "\nEnter the expense number to delete " "(or 0 to cancel): "
         ).strip()
 
         # Validate that the input is a number
@@ -311,14 +290,8 @@ def delete_expense(expenses):
             return
 
         # Validate number range
-        if (
-            expense_number < 1
-            or expense_number > len(expenses)
-        ):
-            print(
-                f"❌ Please enter a number between "
-                f"1 and {len(expenses)}."
-            )
+        if expense_number < 1 or expense_number > len(expenses):
+            print(f"❌ Please enter a number between " f"1 and {len(expenses)}.")
             continue
 
         break
@@ -327,9 +300,7 @@ def delete_expense(expenses):
     # 4. GET SELECTED EXPENSE
     # ----------------------------------------
 
-    selected_expense = expenses[
-        expense_number - 1
-    ]
+    selected_expense = expenses[expense_number - 1]
 
     print("\nYou selected:")
     print(f"  {selected_expense}")
@@ -340,17 +311,16 @@ def delete_expense(expenses):
 
     while True:
 
-        confirmation = input(
-            "\nAre you sure you want to delete "
-            "this expense? (y/n): "
-        ).strip().lower()
+        confirmation = (
+            input("\nAre you sure you want to delete " "this expense? (y/n): ")
+            .strip()
+            .lower()
+        )
 
         if confirmation == "y":
 
             # Delete the selected expense
-            expenses.pop(
-                expense_number - 1
-            )
+            expenses.pop(expense_number - 1)
 
             # Save updated list immediately
             save_expenses(
@@ -358,27 +328,21 @@ def delete_expense(expenses):
                 DATA_FILE,
             )
 
-            print(
-                "\n✅ Expense deleted successfully!"
-            )
+            print("\n✅ Expense deleted successfully!")
 
             return
 
         elif confirmation == "n":
 
-            print(
-                "\nDeletion cancelled."
-            )
+            print("\nDeletion cancelled.")
 
             return
 
         else:
 
-            print(
-                "❌ Please enter 'y' for yes "
-                "or 'n' for no."
-            )
-            
+            print("❌ Please enter 'y' for yes " "or 'n' for no.")
+
+
 def edit_expense(expenses):
     """
     Edit an existing expense selected by the user.
@@ -411,8 +375,7 @@ def edit_expense(expenses):
     while True:
 
         choice = input(
-            "\nEnter the expense number to edit "
-            "(or 0 to cancel): "
+            "\nEnter the expense number to edit " "(or 0 to cancel): "
         ).strip()
 
         try:
@@ -428,14 +391,8 @@ def edit_expense(expenses):
             return
 
         # Validate expense number
-        if (
-            expense_number < 1
-            or expense_number > len(expenses)
-        ):
-            print(
-                f"❌ Please enter a number between "
-                f"1 and {len(expenses)}."
-            )
+        if expense_number < 1 or expense_number > len(expenses):
+            print(f"❌ Please enter a number between " f"1 and {len(expenses)}.")
             continue
 
         break
@@ -444,9 +401,7 @@ def edit_expense(expenses):
     # 4. GET SELECTED EXPENSE
     # ----------------------------------------
 
-    selected_expense = expenses[
-        expense_number - 1
-    ]
+    selected_expense = expenses[expense_number - 1]
 
     print("\nCurrent expense:")
     print(f"  {selected_expense}")
@@ -463,8 +418,7 @@ def edit_expense(expenses):
     )
 
     category = get_valid_input(
-        "Enter new category "
-        "(Food/Transport/Entertainment/Shopping/Other): ",
+        "Enter new category " "(Food/Transport/Entertainment/Shopping/Other): ",
         validate_category,
     )
 
@@ -493,9 +447,7 @@ def edit_expense(expenses):
     # 7. REPLACE OLD EXPENSE
     # ----------------------------------------
 
-    expenses[
-        expense_number - 1
-    ] = updated_expense
+    expenses[expense_number - 1] = updated_expense
 
     # ----------------------------------------
     # 8. SAVE IMMEDIATELY
@@ -508,7 +460,8 @@ def edit_expense(expenses):
 
     print("\n✅ Expense updated successfully!")
     print(f"Updated expense: {updated_expense}")
-    
+
+
 def reports_menu(expenses, budget_manager):
     """
     Display the reports and analytics submenu.
@@ -526,9 +479,7 @@ def reports_menu(expenses, budget_manager):
         print("6. Back to Main Menu")
         print("=" * 40)
 
-        choice = input(
-            "Enter your choice (1-6): "
-        ).strip()
+        choice = input("Enter your choice (1-6): ").strip()
 
         # ----------------------------------------
         # 1. TOTAL & AVERAGE SPENDING
@@ -537,19 +488,11 @@ def reports_menu(expenses, budget_manager):
             total = calculate_total(expenses)
             average = calculate_average(expenses)
 
-            print(
-                "\n=== TOTAL & AVERAGE SPENDING ==="
-            )
+            print("\n=== TOTAL & AVERAGE SPENDING ===")
 
-            print(
-                f"Total spending: "
-                f"{format_money(total)}"
-            )
+            print(f"Total spending: " f"{format_money(total)}")
 
-            print(
-                f"Average expense: "
-                f"{format_money(average)}"
-            )
+            print(f"Average expense: " f"{format_money(average)}")
 
         # ----------------------------------------
         # 2. CATEGORY-WISE SUMMARY
@@ -557,55 +500,35 @@ def reports_menu(expenses, budget_manager):
         elif choice == "2":
             summary = category_summary(expenses)
 
-            print(
-                "\n=== CATEGORY-WISE SUMMARY ==="
-            )
+            print("\n=== CATEGORY-WISE SUMMARY ===")
 
             if not summary:
-                print(
-                    "No expenses available."
-                )
+                print("No expenses available.")
                 continue
 
             for category, data in summary.items():
                 print(f"\n{category}")
 
-                print(
-                    f"  Number of expenses: "
-                    f"{data['count']}"
-                )
+                print(f"  Number of expenses: " f"{data['count']}")
 
-                print(
-                    f"  Total spending: "
-                    f"{format_money(data['total'])}"
-                )
+                print(f"  Total spending: " f"{format_money(data['total'])}")
 
-                print(
-                    f"  Average spending: "
-                    f"{format_money(data['average'])}"
-                )
+                print(f"  Average spending: " f"{format_money(data['average'])}")
 
         # ----------------------------------------
         # 3. MONTHLY REPORT
         # ----------------------------------------
         elif choice == "3":
-            year_input = input(
-                "Enter year (YYYY): "
-            ).strip()
+            year_input = input("Enter year (YYYY): ").strip()
 
-            month_input = input(
-                "Enter month (1-12): "
-            ).strip()
+            month_input = input("Enter month (1-12): ").strip()
 
             try:
                 year = int(year_input)
                 month = int(month_input)
 
                 if month < 1 or month > 12:
-                    print(
-                        "❌ Month must be between "
-                        "1 and 12."
-                    )
+                    print("❌ Month must be between " "1 and 12.")
                     continue
 
                 report = monthly_summary(
@@ -614,147 +537,78 @@ def reports_menu(expenses, budget_manager):
                     month,
                 )
 
-                print(
-                    f"\n=== MONTHLY REPORT: "
-                    f"{year:04d}-{month:02d} ==="
-                )
+                print(f"\n=== MONTHLY REPORT: " f"{year:04d}-{month:02d} ===")
 
-                print(
-                    f"Number of expenses: "
-                    f"{report['count']}"
-                )
+                print(f"Number of expenses: " f"{report['count']}")
 
-                print(
-                    f"Total spent: "
-                    f"{format_money(report['total'])}"
-                )
+                print(f"Total spent: " f"{format_money(report['total'])}")
 
-                print(
-                    f"Average expense: "
-                    f"{format_money(report['average'])}"
-                )
+                print(f"Average expense: " f"{format_money(report['average'])}")
 
             except ValueError:
-                print(
-                    "❌ Please enter valid numbers."
-                )
+                print("❌ Please enter valid numbers.")
 
         # ----------------------------------------
         # 4. HIGHEST & LOWEST EXPENSE
         # ----------------------------------------
         elif choice == "4":
-            highest = find_highest_expense(
-                expenses
-            )
+            highest = find_highest_expense(expenses)
 
-            lowest = find_lowest_expense(
-                expenses
-            )
+            lowest = find_lowest_expense(expenses)
 
-            print(
-                "\n=== HIGHEST & LOWEST EXPENSE ==="
-            )
+            print("\n=== HIGHEST & LOWEST EXPENSE ===")
 
             if highest is None:
-                print(
-                    "No expenses available."
-                )
+                print("No expenses available.")
                 continue
 
-            print(
-                "\nHighest Expense:"
-            )
+            print("\nHighest Expense:")
 
-            print(
-                f"  {highest}"
-            )
+            print(f"  {highest}")
 
-            print(
-                "\nLowest Expense:"
-            )
+            print("\nLowest Expense:")
 
-            print(
-                f"  {lowest}"
-            )
+            print(f"  {lowest}")
 
         # ----------------------------------------
         # 5. BUDGET STATUS
         # ----------------------------------------
         elif choice == "5":
-            print(
-                "\n=== BUDGET STATUS ==="
-            )
+            print("\n=== BUDGET STATUS ===")
 
             try:
-                year = int(
-                    input(
-                        "Enter year (YYYY): "
-                    ).strip()
-                )
+                year = int(input("Enter year (YYYY): ").strip())
 
-                month = int(
-                    input(
-                        "Enter month (1-12): "
-                    ).strip()
-                )
+                month = int(input("Enter month (1-12): ").strip())
 
                 if month < 1 or month > 12:
-                    print(
-                        "❌ Month must be between "
-                        "1 and 12."
-                    )
+                    print("❌ Month must be between " "1 and 12.")
                     continue
 
-                status = (
-                    budget_manager
-                    .calculate_budget_status(
-                        expenses,
-                        month,
-                        year,
-                    )
+                status = budget_manager.calculate_budget_status(
+                    expenses,
+                    month,
+                    year,
                 )
 
                 if status is None:
-                    print(
-                        f"\n❌ No budget found for "
-                        f"{year}-{month:02d}."
-                    )
-                    print(
-                        "Set a budget first from "
-                        "Budget Management."
-                    )
+                    print(f"\n❌ No budget found for " f"{year}-{month:02d}.")
+                    print("Set a budget first from " "Budget Management.")
                     continue
 
-                print(
-                    f"\n=== BUDGET STATUS: "
-                    f"{year:04d}-{month:02d} ==="
-                )
+                print(f"\n=== BUDGET STATUS: " f"{year:04d}-{month:02d} ===")
 
-                print(
-                    f"Budget: "
-                    f"{format_money(status['budget'])}"
-                )
+                print(f"Budget: " f"{format_money(status['budget'])}")
 
-                print(
-                    f"Total spent: "
-                    f"{format_money(status['spent'])}"
-                )
+                print(f"Total spent: " f"{format_money(status['spent'])}")
 
-                print(
-                    f"Remaining: "
-                    f"{format_money(status['remaining'])}"
-                )
+                print(f"Remaining: " f"{format_money(status['remaining'])}")
 
-                print(
-                    f"Budget utilisation: "
-                    f"{status['utilisation']:.2f}%"
-                )
+                print(f"Budget utilisation: " f"{status['utilisation']:.2f}%")
 
                 # Budget exceeded
                 if status["status"] == "EXCEEDED":
-                    print(
-                        "\n🚨 BUDGET EXCEEDED!"
-                    )
+                    print("\n🚨 BUDGET EXCEEDED!")
 
                     print(
                         f"You have exceeded your "
@@ -764,45 +618,30 @@ def reports_menu(expenses, budget_manager):
 
                 # 80% or more used
                 elif status["status"] == "WARNING":
-                    print(
-                        "\n⚠️ WARNING!"
-                    )
+                    print("\n⚠️ WARNING!")
 
-                    print(
-                        "You have used 80% or more "
-                        "of your monthly budget."
-                    )
+                    print("You have used 80% or more " "of your monthly budget.")
 
                 # Budget is safe
                 else:
-                    print(
-                        "\n✅ Budget is within "
-                        "the safe spending limit."
-                    )
+                    print("\n✅ Budget is within " "the safe spending limit.")
 
             except ValueError:
-                print(
-                    "❌ Please enter valid numbers."
-                )
+                print("❌ Please enter valid numbers.")
 
         # ----------------------------------------
         # 6. BACK TO MAIN MENU
         # ----------------------------------------
         elif choice == "6":
-            print(
-                "\nReturning to main menu..."
-            )
+            print("\nReturning to main menu...")
             break
 
         # ----------------------------------------
         # INVALID CHOICE
         # ----------------------------------------
         else:
-            print(
-                "\n❌ Invalid choice. "
-                "Please enter a number between "
-                "1 and 6."
-            )
+            print("\n❌ Invalid choice. " "Please enter a number between " "1 and 6.")
+
 
 def budget_menu(expenses, budget_manager):
     """
@@ -829,74 +668,36 @@ def budget_menu(expenses, budget_manager):
             print("\n=== SET MONTHLY BUDGET ===")
 
             try:
-                year = int(
-                    input("Enter year (YYYY): ").strip()
-                )
+                year = int(input("Enter year (YYYY): ").strip())
 
-                month = int(
-                    input("Enter month (1-12): ").strip()
-                )
+                month = int(input("Enter month (1-12): ").strip())
 
                 if month < 1 or month > 12:
-                    print(
-                        "❌ Month must be between 1 and 12."
-                    )
+                    print("❌ Month must be between 1 and 12.")
                     continue
 
-                amount = validate_amount(
-                    input(
-                        "Enter monthly budget amount: "
-                    ).strip()
-                )
+                amount = validate_amount(input("Enter monthly budget amount: ").strip())
 
                 # Check whether budget already exists
-                existing_budget = (
-                    budget_manager.get_budget(
-                        month,
-                        year
-                    )
-                )
+                existing_budget = budget_manager.get_budget(month, year)
 
                 if existing_budget is not None:
-                    print(
-                        "\n❌ A budget already exists "
-                        f"for {year}-{month:02d}."
-                    )
-                    print(
-                        f"Current budget: "
-                        f"{format_money(existing_budget.amount)}"
-                    )
+                    print("\n❌ A budget already exists " f"for {year}-{month:02d}.")
+                    print(f"Current budget: " f"{format_money(existing_budget.amount)}")
                     continue
 
                 # Create new Budget object
-                budget = Budget(
-                    month=month,
-                    year=year,
-                    amount=amount
-                )
+                budget = Budget(month=month, year=year, amount=amount)
 
                 # Add to manager
-                budget_manager.add_budget(
-                    budget
-                )
+                budget_manager.add_budget(budget)
 
-                print(
-                    "\n✅ Monthly budget added "
-                    "successfully!"
-                )
-                print(
-                    f"   Period: "
-                    f"{year}-{month:02d}"
-                )
-                print(
-                    f"   Budget: "
-                    f"{format_money(amount)}"
-                )
+                print("\n✅ Monthly budget added " "successfully!")
+                print(f"   Period: " f"{year}-{month:02d}")
+                print(f"   Budget: " f"{format_money(amount)}")
 
             except ValueError as error:
-                print(
-                    f"\n❌ Invalid input: {error}"
-                )
+                print(f"\n❌ Invalid input: {error}")
 
         # ----------------------------------------
         # 2. VIEW BUDGET STATUS
@@ -905,65 +706,32 @@ def budget_menu(expenses, budget_manager):
             print("\n=== VIEW BUDGET STATUS ===")
 
             try:
-                year = int(
-                    input("Enter year (YYYY): ").strip()
-                )
+                year = int(input("Enter year (YYYY): ").strip())
 
-                month = int(
-                    input("Enter month (1-12): ").strip()
-                )
+                month = int(input("Enter month (1-12): ").strip())
 
                 if month < 1 or month > 12:
-                    print(
-                        "❌ Month must be between 1 and 12."
-                    )
+                    print("❌ Month must be between 1 and 12.")
                     continue
 
-                status = (
-                    budget_manager
-                    .calculate_budget_status(
-                        expenses,
-                        month,
-                        year
-                    )
-                )
+                status = budget_manager.calculate_budget_status(expenses, month, year)
 
                 if status is None:
-                    print(
-                        f"\n❌ No budget found for "
-                        f"{year}-{month:02d}."
-                    )
+                    print(f"\n❌ No budget found for " f"{year}-{month:02d}.")
                     continue
 
-                print(
-                    f"\n=== BUDGET STATUS: "
-                    f"{year}-{month:02d} ==="
-                )
+                print(f"\n=== BUDGET STATUS: " f"{year}-{month:02d} ===")
 
-                print(
-                    f"Budget: "
-                    f"{format_money(status['budget'])}"
-                )
+                print(f"Budget: " f"{format_money(status['budget'])}")
 
-                print(
-                    f"Total spent: "
-                    f"{format_money(status['spent'])}"
-                )
+                print(f"Total spent: " f"{format_money(status['spent'])}")
 
-                print(
-                    f"Remaining: "
-                    f"{format_money(status['remaining'])}"
-                )
+                print(f"Remaining: " f"{format_money(status['remaining'])}")
 
-                print(
-                    f"Budget utilisation: "
-                    f"{status['utilisation']:.2f}%"
-                )
+                print(f"Budget utilisation: " f"{status['utilisation']:.2f}%")
 
                 if status["status"] == "EXCEEDED":
-                    print(
-                        "\n🚨 BUDGET EXCEEDED!"
-                    )
+                    print("\n🚨 BUDGET EXCEEDED!")
                     print(
                         f"You have exceeded your budget by "
                         f"{format_money(abs(status['remaining']))}."
@@ -971,21 +739,14 @@ def budget_menu(expenses, budget_manager):
 
                 elif status["status"] == "WARNING":
                     print(
-                        "\n⚠️ WARNING: "
-                        "You have used 80% or more "
-                        "of your budget."
+                        "\n⚠️ WARNING: " "You have used 80% or more " "of your budget."
                     )
 
                 else:
-                    print(
-                        "\n✅ Budget is within the "
-                        "safe spending limit."
-                    )
+                    print("\n✅ Budget is within the " "safe spending limit.")
 
             except ValueError as error:
-                print(
-                    f"\n❌ Invalid input: {error}"
-                )
+                print(f"\n❌ Invalid input: {error}")
 
         # ----------------------------------------
         # 3. VIEW ALL BUDGETS
@@ -993,20 +754,13 @@ def budget_menu(expenses, budget_manager):
         elif choice == "3":
             print("\n=== ALL BUDGETS ===")
 
-            budgets = (
-                budget_manager.get_all_budgets()
-            )
+            budgets = budget_manager.get_all_budgets()
 
             if not budgets:
-                print(
-                    "No budgets have been set."
-                )
+                print("No budgets have been set.")
                 continue
 
-            for index, budget in enumerate(
-                budgets,
-                start=1
-            ):
+            for index, budget in enumerate(budgets, start=1):
                 print(
                     f"{index}. "
                     f"{budget.year}-"
@@ -1021,20 +775,13 @@ def budget_menu(expenses, budget_manager):
         elif choice == "4":
             print("\n=== DELETE BUDGET ===")
 
-            budgets = (
-                budget_manager.get_all_budgets()
-            )
+            budgets = budget_manager.get_all_budgets()
 
             if not budgets:
-                print(
-                    "No budgets available to delete."
-                )
+                print("No budgets available to delete.")
                 continue
 
-            for index, budget in enumerate(
-                budgets,
-                start=1
-            ):
+            for index, budget in enumerate(budgets, start=1):
                 print(
                     f"{index}. "
                     f"{budget.year}-"
@@ -1045,91 +792,59 @@ def budget_menu(expenses, budget_manager):
             try:
                 choice_number = int(
                     input(
-                        "\nEnter budget number "
-                        "to delete "
-                        "(or 0 to cancel): "
+                        "\nEnter budget number " "to delete " "(or 0 to cancel): "
                     ).strip()
                 )
 
                 if choice_number == 0:
-                    print(
-                        "Deletion cancelled."
-                    )
+                    print("Deletion cancelled.")
                     continue
 
-                if (
-                    choice_number < 1
-                    or choice_number > len(budgets)
-                ):
-                    print(
-                        "❌ Invalid budget number."
-                    )
+                if choice_number < 1 or choice_number > len(budgets):
+                    print("❌ Invalid budget number.")
                     continue
 
-                selected_budget = budgets[
-                    choice_number - 1
-                ]
+                selected_budget = budgets[choice_number - 1]
 
-                print(
-                    "\nYou selected:"
-                )
+                print("\nYou selected:")
                 print(
                     f"  {selected_budget.year}-"
                     f"{selected_budget.month:02d} | "
                     f"{format_money(selected_budget.amount)}"
                 )
 
-                confirmation = input(
-                    "\nAre you sure you want "
-                    "to delete this budget? (y/n): "
-                ).strip().lower()
+                confirmation = (
+                    input("\nAre you sure you want " "to delete this budget? (y/n): ")
+                    .strip()
+                    .lower()
+                )
 
                 if confirmation == "y":
-                    removed = (
-                        budget_manager
-                        .remove_budget(
-                            selected_budget.month,
-                            selected_budget.year
-                        )
+                    removed = budget_manager.remove_budget(
+                        selected_budget.month, selected_budget.year
                     )
 
                     if removed:
-                        print(
-                            "\n✅ Budget deleted "
-                            "successfully!"
-                        )
+                        print("\n✅ Budget deleted " "successfully!")
 
                 elif confirmation == "n":
-                    print(
-                        "\nDeletion cancelled."
-                    )
+                    print("\nDeletion cancelled.")
 
                 else:
-                    print(
-                        "\n❌ Please enter "
-                        "'y' or 'n'."
-                    )
+                    print("\n❌ Please enter " "'y' or 'n'.")
 
             except ValueError:
-                print(
-                    "❌ Please enter a valid number."
-                )
+                print("❌ Please enter a valid number.")
 
         # ----------------------------------------
         # 5. BACK TO MAIN MENU
         # ----------------------------------------
         elif choice == "5":
-            print(
-                "\nReturning to main menu..."
-            )
+            print("\nReturning to main menu...")
             break
 
         else:
-            print(
-                "\n❌ Invalid choice. "
-                "Please enter a number between 1 and 5."
-            )
-
+            print("\n❌ Invalid choice. " "Please enter a number between 1 and 5.")
 
     while True:
 
@@ -1141,9 +856,7 @@ def budget_menu(expenses, budget_manager):
         print("3. Back to Main Menu")
         print("=" * 40)
 
-        choice = input(
-            "Enter your choice (1-3): "
-        ).strip()
+        choice = input("Enter your choice (1-3): ").strip()
 
         # ----------------------------------------
         # 1. CREATE BACKUP
@@ -1157,15 +870,14 @@ def budget_menu(expenses, budget_manager):
         # ----------------------------------------
         elif choice == "2":
 
-            confirmation = input(
-                "\nRestoring will overwrite current data.\n"
-                "Continue? (y/n): "
-            ).strip().lower()
+            confirmation = (
+                input("\nRestoring will overwrite current data.\n" "Continue? (y/n): ")
+                .strip()
+                .lower()
+            )
 
             if confirmation != "y":
-                print(
-                    "\nRestore cancelled."
-                )
+                print("\nRestore cancelled.")
                 continue
 
             try:
@@ -1177,33 +889,22 @@ def budget_menu(expenses, budget_manager):
                 # RELOAD EXPENSES
                 # ----------------------------------------
 
-                restored_expenses = load_expenses(
-                    DATA_FILE
-                )
+                restored_expenses = load_expenses(DATA_FILE)
 
                 # Replace contents of existing list
                 # instead of creating a new list.
                 expenses.clear()
-                expenses.extend(
-                    restored_expenses
-                )
+                expenses.extend(restored_expenses)
 
                 # ----------------------------------------
                 # RELOAD BUDGETS
                 # ----------------------------------------
 
-                budget_manager.load(
-                    BUDGETS_FILE
-                )
+                budget_manager.load(BUDGETS_FILE)
 
-                print(
-                    "\n✅ Application data reloaded successfully."
-                )
+                print("\n✅ Application data reloaded successfully.")
 
-                print(
-                    f"Expenses currently loaded: "
-                    f"{len(expenses)}"
-                )
+                print(f"Expenses currently loaded: " f"{len(expenses)}")
 
                 print(
                     f"Budgets currently loaded: "
@@ -1216,22 +917,16 @@ def budget_menu(expenses, budget_manager):
                 TypeError,
             ) as error:
 
-                print(
-                    "\n❌ Failed to reload restored data:"
-                )
+                print("\n❌ Failed to reload restored data:")
 
-                print(
-                    f"   {error}"
-                )
+                print(f"   {error}")
 
         # ----------------------------------------
         # 3. BACK TO MAIN MENU
         # ----------------------------------------
         elif choice == "3":
 
-            print(
-                "\nReturning to Main Menu..."
-            )
+            print("\nReturning to Main Menu...")
 
             break
 
@@ -1240,10 +935,9 @@ def budget_menu(expenses, budget_manager):
         # ----------------------------------------
         else:
 
-            print(
-                "\n❌ Invalid choice."
-            )
-                                  
+            print("\n❌ Invalid choice.")
+
+
 def charts_menu(expenses):
     """
     Display the charts submenu.
@@ -1259,25 +953,17 @@ def charts_menu(expenses):
         print("3. Back")
         print("=" * 40)
 
-        choice = input(
-            "Enter your choice (1-3): "
-        ).strip()
+        choice = input("Enter your choice (1-3): ").strip()
 
         if choice == "1":
 
-            generate_category_pie_chart(
-                expenses
-            )
+            generate_category_pie_chart(expenses)
 
         elif choice == "2":
 
             try:
 
-                year = int(
-                    input(
-                        "Enter year (YYYY): "
-                    ).strip()
-                )
+                year = int(input("Enter year (YYYY): ").strip())
 
                 generate_monthly_bar_chart(
                     expenses,
@@ -1286,23 +972,17 @@ def charts_menu(expenses):
 
             except ValueError:
 
-                print(
-                    "❌ Please enter a valid year."
-                )
+                print("❌ Please enter a valid year.")
 
         elif choice == "3":
 
-            print(
-                "\nReturning to Main Menu..."
-            )
+            print("\nReturning to Main Menu...")
 
             break
 
         else:
 
-            print(
-                "\n❌ Invalid choice."
-            )
+            print("\n❌ Invalid choice.")
 
 
 def export_menu(expenses):
@@ -1322,9 +1002,7 @@ def export_menu(expenses):
         print("5. Back")
         print("=" * 40)
 
-        choice = input(
-            "Enter your choice (1-5): "
-        ).strip()
+        choice = input("Enter your choice (1-5): ").strip()
 
         if choice == "1":
 
@@ -1344,33 +1022,29 @@ def export_menu(expenses):
             export_to_json(expenses)
             export_report(expenses)
 
-            print(
-                "\n✅ All reports exported successfully!"
-            )
+            print("\n✅ All reports exported successfully!")
 
         elif choice == "5":
 
-            print(
-                "\nReturning to Main Menu..."
-            )
+            print("\nReturning to Main Menu...")
 
             break
 
         else:
 
-            print(
-                "\n❌ Invalid choice."
-            )
+            print("\n❌ Invalid choice.")
+
+
 def backup_menu(expenses, budget_manager):
     """
-  ##  Display the backup and restore submenu.
+    ##  Display the backup and restore submenu.
 
-    #Allows the user to create backups and restore previously
-    #backed-up data. After restoration, expenses and budgets
-   # are reloaded into memory so the running application
-   # immediately reflects the restored data.
-    
-   """
+      #Allows the user to create backups and restore previously
+      #backed-up data. After restoration, expenses and budgets
+     # are reloaded into memory so the running application
+     # immediately reflects the restored data.
+
+    """
     while True:
 
         print("\n" + "=" * 40)
@@ -1381,9 +1055,7 @@ def backup_menu(expenses, budget_manager):
         print("3. Back to Main Menu")
         print("=" * 40)
 
-        choice = input(
-            "Enter your choice (1-3): "
-        ).strip()
+        choice = input("Enter your choice (1-3): ").strip()
 
         # ----------------------------------------
         # 1. CREATE BACKUP
@@ -1397,15 +1069,14 @@ def backup_menu(expenses, budget_manager):
         # ----------------------------------------
         elif choice == "2":
 
-            confirmation = input(
-                "\nRestoring will overwrite current data.\n"
-                "Continue? (y/n): "
-            ).strip().lower()
+            confirmation = (
+                input("\nRestoring will overwrite current data.\n" "Continue? (y/n): ")
+                .strip()
+                .lower()
+            )
 
             if confirmation != "y":
-                print(
-                    "\nRestore cancelled."
-                )
+                print("\nRestore cancelled.")
                 continue
 
             try:
@@ -1417,33 +1088,22 @@ def backup_menu(expenses, budget_manager):
                 # RELOAD EXPENSES
                 # ----------------------------------------
 
-                restored_expenses = load_expenses(
-                    DATA_FILE
-                )
+                restored_expenses = load_expenses(DATA_FILE)
 
                 # Replace contents of existing list
                 # instead of creating a new list.
                 expenses.clear()
-                expenses.extend(
-                    restored_expenses
-                )
+                expenses.extend(restored_expenses)
 
                 # ----------------------------------------
                 # RELOAD BUDGETS
                 # ----------------------------------------
 
-                budget_manager.load(
-                    BUDGETS_FILE
-                )
+                budget_manager.load(BUDGETS_FILE)
 
-                print(
-                    "\n✅ Application data reloaded successfully."
-                )
+                print("\n✅ Application data reloaded successfully.")
 
-                print(
-                    f"Expenses currently loaded: "
-                    f"{len(expenses)}"
-                )
+                print(f"Expenses currently loaded: " f"{len(expenses)}")
 
                 print(
                     f"Budgets currently loaded: "
@@ -1456,22 +1116,16 @@ def backup_menu(expenses, budget_manager):
                 TypeError,
             ) as error:
 
-                print(
-                    "\n❌ Failed to reload restored data:"
-                )
+                print("\n❌ Failed to reload restored data:")
 
-                print(
-                    f"   {error}"
-                )
+                print(f"   {error}")
 
         # ----------------------------------------
         # 3. BACK TO MAIN MENU
         # ----------------------------------------
         elif choice == "3":
 
-            print(
-                "\nReturning to Main Menu..."
-            )
+            print("\nReturning to Main Menu...")
 
             break
 
@@ -1480,16 +1134,13 @@ def backup_menu(expenses, budget_manager):
         # ----------------------------------------
         else:
 
-            print(
-                "\n❌ Invalid choice."
-            )
-                                  
-def run_menu(expenses, budget_manager):
+            print("\n❌ Invalid choice.")
 
+
+def run_menu(expenses, budget_manager):
     """
     Run the main interactive menu until the user chooses Exit.
     """
-    
 
     while True:
 
@@ -1511,9 +1162,7 @@ def run_menu(expenses, budget_manager):
         print("13. Exit")
         print("=" * 40)
 
-        choice = input(
-            "Enter your choice (1-13): "
-        ).strip()
+        choice = input("Enter your choice (1-13): ").strip()
 
         if choice == "1":
 
@@ -1547,13 +1196,13 @@ def run_menu(expenses, budget_manager):
 
         elif choice == "7":
 
-             dashboard_menu(
-        expenses,
-        budget_manager,
-             )
-        elif choice =="8":
-            choose_currency() 
-        elif choice == "9":    
+            dashboard_menu(
+                expenses,
+                budget_manager,
+            )
+        elif choice == "8":
+            choose_currency()
+        elif choice == "9":
 
             budget_menu(
                 expenses,
@@ -1577,10 +1226,7 @@ def run_menu(expenses, budget_manager):
 
         elif choice == "13":
 
-            print(
-                "\nThank you for using "
-                "Personal Finance Manager!"
-            )
+            print("\nThank you for using " "Personal Finance Manager!")
 
             print("Goodbye! 👋")
 
@@ -1588,7 +1234,4 @@ def run_menu(expenses, budget_manager):
 
         else:
 
-            print(
-                "\n❌ Invalid choice. "
-                "Please enter a number between 1 and 12."
-            )
+            print("\n❌ Invalid choice. " "Please enter a number between 1 and 12.")

@@ -8,7 +8,6 @@ from src.budget_file_manager import (
 )
 from src.reports import monthly_summary
 
-
 BUDGETS_FILE = Path("data/budgets.json")
 
 
@@ -35,9 +34,7 @@ class BudgetManager:
             ValueError: If a budget already exists for the same month/year.
         """
         if not isinstance(budget, Budget):
-            raise TypeError(
-                "Only Budget objects can be added."
-            )
+            raise TypeError("Only Budget objects can be added.")
 
         for existing_budget in self.budgets:
             if (
@@ -45,8 +42,7 @@ class BudgetManager:
                 and existing_budget.year == budget.year
             ):
                 raise ValueError(
-                    f"A budget already exists for "
-                    f"{budget.year}-{budget.month:02d}."
+                    f"A budget already exists for " f"{budget.year}-{budget.month:02d}."
                 )
 
         self.budgets.append(budget)
@@ -59,10 +55,7 @@ class BudgetManager:
             True if a budget was removed, otherwise False.
         """
         for index, budget in enumerate(self.budgets):
-            if (
-                budget.month == month
-                and budget.year == year
-            ):
+            if budget.month == month and budget.year == year:
                 self.budgets.pop(index)
                 return True
 
@@ -76,20 +69,12 @@ class BudgetManager:
             Budget object if found, otherwise None.
         """
         for budget in self.budgets:
-            if (
-                budget.month == month
-                and budget.year == year
-            ):
+            if budget.month == month and budget.year == year:
                 return budget
 
         return None
 
-    def calculate_budget_status(
-        self,
-        expenses,
-        month,
-        year
-    ):
+    def calculate_budget_status(self, expenses, month, year):
         """
         Calculate spending status for a monthly budget.
 
@@ -102,20 +87,16 @@ class BudgetManager:
         if budget is None:
             return None
 
-        report = monthly_summary(
-            expenses,
-            year,
-            month
-        )
+        report = monthly_summary(expenses, year, month)
 
         spent = report["total"]
         budget_amount = budget.amount
 
         remaining = budget_amount - spent
 
-        utilisation = (
-            (spent / budget_amount) * Decimal("100")
-        ).quantize(Decimal("0.01"))
+        utilisation = ((spent / budget_amount) * Decimal("100")).quantize(
+            Decimal("0.01")
+        )
 
         if spent > budget_amount:
             status = "EXCEEDED"
@@ -142,10 +123,7 @@ class BudgetManager:
         """
         Save all current budgets to JSON.
         """
-        save_budgets(
-            self.budgets,
-            filename
-        )
+        save_budgets(self.budgets, filename)
 
     def load(self, filename=BUDGETS_FILE):
         """

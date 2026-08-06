@@ -7,11 +7,14 @@ from src.reports import (
     calculate_average,
     category_summary,
 )
+
 EXPORT_FOLDER = Path("reports")
 
 CSV_FILE = EXPORT_FOLDER / "expenses_export.csv"
 JSON_FILE = EXPORT_FOLDER / "expenses_export.json"
 TEXT_FILE = EXPORT_FOLDER / "finance_report.txt"
+
+
 def export_to_csv(expenses):
     """
     Export all expenses to a CSV file.
@@ -50,10 +53,9 @@ def export_to_csv(expenses):
                 ]
             )
 
-    print(
-        f"\n✅ CSV exported to:\n{CSV_FILE}"
-    )
-    
+    print(f"\n✅ CSV exported to:\n{CSV_FILE}")
+
+
 def export_to_json(expenses):
     """
     Export expenses to JSON.
@@ -88,9 +90,9 @@ def export_to_json(expenses):
             indent=4,
         )
 
-    print(
-        f"\n✅ JSON exported to:\n{JSON_FILE}"
-    )
+    print(f"\n✅ JSON exported to:\n{JSON_FILE}")
+
+
 def export_report(expenses):
     """
     Export a complete finance report.
@@ -110,48 +112,26 @@ def export_report(expenses):
         encoding="utf-8",
     ) as file:
 
-        file.write(
-            "PERSONAL FINANCE REPORT\n"
-        )
+        file.write("PERSONAL FINANCE REPORT\n")
 
-        file.write(
-            "=" * 35 + "\n\n"
-        )
+        file.write("=" * 35 + "\n\n")
 
-        file.write(
-            f"Total Spending : {total}\n"
-        )
+        file.write(f"Total Spending : {total}\n")
 
-        file.write(
-            f"Average Expense : {average}\n\n"
-        )
+        file.write(f"Average Expense : {average}\n\n")
 
-        file.write(
-            "CATEGORY SUMMARY\n"
-        )
+        file.write("CATEGORY SUMMARY\n")
 
-        file.write(
-            "-" * 35 + "\n"
-        )
+        file.write("-" * 35 + "\n")
 
         for category, data in summary.items():
 
-            file.write(
-                f"\n{category}\n"
-            )
+            file.write(f"\n{category}\n")
 
-            file.write(
-                f"Count : {data['count']}\n"
-            )
+            file.write(f"Count : {data['count']}\n")
 
-            file.write(
-                f"Total : {data['total']}\n"
-            )
+            file.write(f"Total : {data['total']}\n")
 
-            file.write(
-                f"Average : {data['average']}\n"
-            )
+            file.write(f"Average : {data['average']}\n")
 
-    print(
-        f"\n✅ Finance report exported to:\n{TEXT_FILE}"
-    )
+    print(f"\n✅ Finance report exported to:\n{TEXT_FILE}")

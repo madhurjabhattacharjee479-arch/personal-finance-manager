@@ -1,7 +1,6 @@
 import json
 from pathlib import Path
 
-
 # File used to store user settings
 SETTINGS_FILE = Path("data/settings.json")
 
@@ -36,15 +35,8 @@ def save_settings():
     try:
         SETTINGS_FILE.parent.mkdir(parents=True, exist_ok=True)
 
-        with SETTINGS_FILE.open(
-            "w",
-            encoding="utf-8"
-        ) as file:
-            json.dump(
-                CURRENT_CURRENCY,
-                file,
-                indent=4
-            )
+        with SETTINGS_FILE.open("w", encoding="utf-8") as file:
+            json.dump(CURRENT_CURRENCY, file, indent=4)
 
     except OSError as error:
         print(f"❌ Unable to save settings: {error}")
@@ -61,10 +53,7 @@ def load_settings():
         return
 
     try:
-        with SETTINGS_FILE.open(
-            "r",
-            encoding="utf-8"
-        ) as file:
+        with SETTINGS_FILE.open("r", encoding="utf-8") as file:
             saved_settings = json.load(file)
 
         code = saved_settings.get("code")
@@ -72,10 +61,8 @@ def load_settings():
 
         # Validate saved currency before applying it
         valid_currency = any(
-            currency_code == code
-            and currency_symbol == symbol
-            for currency_code, currency_symbol
-            in CURRENCIES.values()
+            currency_code == code and currency_symbol == symbol
+            for currency_code, currency_symbol in CURRENCIES.values()
         )
 
         if valid_currency:
@@ -83,10 +70,7 @@ def load_settings():
             CURRENT_CURRENCY["symbol"] = symbol
 
     except (OSError, json.JSONDecodeError):
-        print(
-            "⚠️ Unable to load saved settings. "
-            "Using default currency: INR (₹)."
-        )
+        print("⚠️ Unable to load saved settings. " "Using default currency: INR (₹).")
 
 
 def choose_currency():
@@ -110,9 +94,7 @@ def choose_currency():
         print("4. GBP (£)")
         print("5. Back to Main Menu")
 
-        choice = input(
-            "\nSelect currency (1-5): "
-        ).strip()
+        choice = input("\nSelect currency (1-5): ").strip()
 
         if choice in CURRENCIES:
             code, symbol = CURRENCIES[choice]
@@ -123,14 +105,9 @@ def choose_currency():
             # Save the new currency immediately
             save_settings()
 
-            print(
-                f"\n✅ Currency changed to "
-                f"{code} ({symbol})"
-            )
+            print(f"\n✅ Currency changed to " f"{code} ({symbol})")
 
-            print(
-                "✅ Currency preference saved."
-            )
+            print("✅ Currency preference saved.")
 
             return
 
@@ -138,7 +115,4 @@ def choose_currency():
             return
 
         else:
-            print(
-                "\n❌ Invalid choice. "
-                "Please select 1-5."
-            )
+            print("\n❌ Invalid choice. " "Please select 1-5.")

@@ -2,7 +2,6 @@ import shutil
 import csv
 from pathlib import Path
 
-
 DATA_FOLDER = Path("data")
 BACKUP_FOLDER = Path("backup")
 
@@ -64,45 +63,28 @@ def create_backup():
                         # Skip CSV header
                         next(reader, None)
 
-                        expense_count = sum(
-                            1 for row in reader
-                            if row
-                        )
+                        expense_count = sum(1 for row in reader if row)
 
                 except (
                     OSError,
                     csv.Error,
                 ) as error:
 
-                    print(
-                        f"\n⚠️ Unable to count "
-                        f"expenses: {error}"
-                    )
+                    print(f"\n⚠️ Unable to count " f"expenses: {error}")
 
     if copied == 0:
 
-        print(
-            "\n❌ No data files found to back up."
-        )
+        print("\n❌ No data files found to back up.")
 
     else:
 
-        print(
-            "\n✅ Backup completed successfully."
-        )
+        print("\n✅ Backup completed successfully.")
 
-        print(
-            f"Files backed up: {copied}"
-        )
+        print(f"Files backed up: {copied}")
 
-        print(
-            f"Expenses backed up: "
-            f"{expense_count}"
-        )
+        print(f"Expenses backed up: " f"{expense_count}")
 
-        print(
-            f"Location: {BACKUP_FOLDER}"
-        )
+        print(f"Location: {BACKUP_FOLDER}")
 
 
 def restore_backup():
@@ -120,9 +102,7 @@ def restore_backup():
 
     if not BACKUP_FOLDER.exists():
 
-        print(
-            "\n❌ No backup folder found."
-        )
+        print("\n❌ No backup folder found.")
 
         return
 
@@ -170,38 +150,23 @@ def restore_backup():
                         # Skip CSV header
                         next(reader, None)
 
-                        expense_count = sum(
-                            1 for row in reader
-                            if row
-                        )
+                        expense_count = sum(1 for row in reader if row)
 
                 except (
                     OSError,
                     csv.Error,
                 ) as error:
 
-                    print(
-                        f"\n⚠️ Unable to count "
-                        f"restored expenses: {error}"
-                    )
+                    print(f"\n⚠️ Unable to count " f"restored expenses: {error}")
 
     if restored == 0:
 
-        print(
-            "\n❌ No backup files available."
-        )
+        print("\n❌ No backup files available.")
 
     else:
 
-        print(
-            "\n✅ Backup restored successfully."
-        )
+        print("\n✅ Backup restored successfully.")
 
-        print(
-            f"Files restored: {restored}"
-        )
+        print(f"Files restored: {restored}")
 
-        print(
-            f"Expenses restored: "
-            f"{expense_count}"
-        )
+        print(f"Expenses restored: " f"{expense_count}")

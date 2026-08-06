@@ -1,7 +1,10 @@
 import csv
 from pathlib import Path
 from src.expense import Expense
+
 CSV_HEADER = ["Date", "Category", "Amount", "Description"]
+
+
 def save_expenses(expenses, filename):
     """
     Save a list of Expense objects to a CSV file.
@@ -18,9 +21,7 @@ def save_expenses(expenses, filename):
     file_path = Path(filename)
     for expense in expenses:
         if not isinstance(expense, Expense):
-            raise TypeError(
-                f"Expected Expense object, got {type(expense).__name__}."
-            )
+            raise TypeError(f"Expected Expense object, got {type(expense).__name__}.")
     try:
         file_path.parent.mkdir(parents=True, exist_ok=True)
         with file_path.open("w", newline="", encoding="utf-8") as csv_file:
@@ -37,6 +38,8 @@ def save_expenses(expenses, filename):
                 )
     except OSError as error:
         raise OSError(f"Unable to save expenses to '{file_path}'.") from error
+
+
 def load_expenses(filename):
     """
     Load expenses from a CSV file and return them as Expense objects.
@@ -72,9 +75,7 @@ def load_expenses(filename):
                     amount = row.get("Amount", "").strip()
                     description = row.get("Description", "").strip()
                     if not date or not category or not amount:
-                        raise ValueError(
-                            "Date, Category, and Amount cannot be empty."
-                        )
+                        raise ValueError("Date, Category, and Amount cannot be empty.")
                     expense = Expense(amount, category, date, description)
                     expenses.append(expense)
                 except ValueError as error:

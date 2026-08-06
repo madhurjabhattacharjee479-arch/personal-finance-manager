@@ -1,4 +1,3 @@
-
 from decimal import Decimal
 
 import pytest
@@ -6,10 +5,10 @@ import pytest
 from src.expense import Expense
 from src.file_manager import load_expenses, save_expenses
 
-
 # ========================================
 # SAVE EXPENSES TEST
 # ========================================
+
 
 def test_save_expenses_creates_csv(tmp_path):
     data_file = tmp_path / "expenses.csv"
@@ -37,6 +36,7 @@ def test_save_expenses_creates_csv(tmp_path):
 # ========================================
 # SAVE AND LOAD TEST
 # ========================================
+
 
 def test_save_and_load_expenses(tmp_path):
     data_file = tmp_path / "expenses.csv"
@@ -75,6 +75,7 @@ def test_save_and_load_expenses(tmp_path):
 # DECIMAL PRESERVATION TEST
 # ========================================
 
+
 def test_loaded_amount_is_decimal(tmp_path):
     data_file = tmp_path / "expenses.csv"
 
@@ -103,6 +104,7 @@ def test_loaded_amount_is_decimal(tmp_path):
 # MISSING FILE TEST
 # ========================================
 
+
 def test_load_missing_file_returns_empty_list(tmp_path):
     data_file = tmp_path / "does_not_exist.csv"
 
@@ -114,6 +116,7 @@ def test_load_missing_file_returns_empty_list(tmp_path):
 # ========================================
 # EMPTY CSV TEST
 # ========================================
+
 
 def test_load_empty_csv_returns_empty_list(tmp_path):
     data_file = tmp_path / "empty.csv"
@@ -132,6 +135,7 @@ def test_load_empty_csv_returns_empty_list(tmp_path):
 # HEADER-ONLY CSV TEST
 # ========================================
 
+
 def test_load_header_only_csv_returns_empty_list(tmp_path):
     data_file = tmp_path / "header_only.csv"
 
@@ -149,12 +153,12 @@ def test_load_header_only_csv_returns_empty_list(tmp_path):
 # INVALID COLUMN TEST
 # ========================================
 
+
 def test_load_csv_with_missing_column_raises_error(tmp_path):
     data_file = tmp_path / "invalid.csv"
 
     data_file.write_text(
-        "Date,Category,Amount\n"
-        "2026-07-26,Food,45.50\n",
+        "Date,Category,Amount\n" "2026-07-26,Food,45.50\n",
         encoding="utf-8",
     )
 
@@ -166,12 +170,12 @@ def test_load_csv_with_missing_column_raises_error(tmp_path):
 # INVALID EXPENSE DATA TEST
 # ========================================
 
+
 def test_load_csv_with_invalid_amount_raises_error(tmp_path):
     data_file = tmp_path / "invalid_amount.csv"
 
     data_file.write_text(
-        "Date,Category,Amount,Description\n"
-        "2026-07-26,Food,abc,Lunch\n",
+        "Date,Category,Amount,Description\n" "2026-07-26,Food,abc,Lunch\n",
         encoding="utf-8",
     )
 
@@ -183,12 +187,12 @@ def test_load_csv_with_invalid_amount_raises_error(tmp_path):
 # INVALID CATEGORY TEST
 # ========================================
 
+
 def test_load_csv_with_invalid_category_raises_error(tmp_path):
     data_file = tmp_path / "invalid_category.csv"
 
     data_file.write_text(
-        "Date,Category,Amount,Description\n"
-        "2026-07-26,Bills,45.50,Electricity\n",
+        "Date,Category,Amount,Description\n" "2026-07-26,Bills,45.50,Electricity\n",
         encoding="utf-8",
     )
 
@@ -199,6 +203,7 @@ def test_load_csv_with_invalid_category_raises_error(tmp_path):
 # ========================================
 # MULTIPLE EXPENSES TEST
 # ========================================
+
 
 def test_save_and_load_multiple_expenses(tmp_path):
     data_file = tmp_path / "multiple.csv"

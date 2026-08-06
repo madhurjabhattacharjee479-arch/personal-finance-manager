@@ -1,4 +1,3 @@
-
 from decimal import Decimal
 
 import pytest
@@ -13,10 +12,10 @@ from src.reports import (
     find_lowest_expense,
 )
 
-
 # ========================================
 # TEST DATA
 # ========================================
+
 
 @pytest.fixture
 def sample_expenses():
@@ -58,6 +57,7 @@ def sample_expenses():
 # TOTAL SPENDING TESTS
 # ========================================
 
+
 def test_calculate_total(sample_expenses):
     total = calculate_total(sample_expenses)
 
@@ -72,6 +72,7 @@ def test_calculate_total_empty_list():
 # AVERAGE SPENDING TESTS
 # ========================================
 
+
 def test_calculate_average(sample_expenses):
     average = calculate_average(sample_expenses)
 
@@ -85,6 +86,7 @@ def test_calculate_average_empty_list():
 # ========================================
 # CATEGORY SUMMARY TESTS
 # ========================================
+
 
 def test_category_summary(sample_expenses):
     summary = category_summary(sample_expenses)
@@ -110,6 +112,7 @@ def test_category_summary_empty_list():
 # ========================================
 # MONTHLY SUMMARY TESTS
 # ========================================
+
 
 def test_monthly_summary(sample_expenses):
     report = monthly_summary(
@@ -151,6 +154,7 @@ def test_monthly_summary_no_matching_expenses(sample_expenses):
 # HIGHEST EXPENSE TESTS
 # ========================================
 
+
 def test_find_highest_expense(sample_expenses):
     highest = find_highest_expense(sample_expenses)
 
@@ -166,6 +170,7 @@ def test_find_highest_expense_empty_list():
 # ========================================
 # LOWEST EXPENSE TESTS
 # ========================================
+
 
 def test_find_lowest_expense(sample_expenses):
     lowest = find_lowest_expense(sample_expenses)

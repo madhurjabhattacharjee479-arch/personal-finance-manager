@@ -22,11 +22,11 @@ def test_valid_budget():
 @pytest.mark.parametrize(
     "month, year, amount",
     [
-        (13, 2026, 20000),      # Invalid month
-        (7, 1999, 20000),       # Invalid year
-        (7, 2026, "abc"),       # Invalid amount type
-        (7, 2026, 0),           # Zero amount
-        (7, 2026, -5000),       # Negative amount
+        (13, 2026, 20000),  # Invalid month
+        (7, 1999, 20000),  # Invalid year
+        (7, 2026, "abc"),  # Invalid amount type
+        (7, 2026, 0),  # Zero amount
+        (7, 2026, -5000),  # Negative amount
     ],
 )
 def test_invalid_budget(month, year, amount):

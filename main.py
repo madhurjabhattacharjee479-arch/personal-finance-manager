@@ -1,4 +1,3 @@
-
 from pathlib import Path
 
 from src.file_manager import load_expenses, save_expenses
@@ -29,51 +28,26 @@ def main():
 
     try:
         budget_manager.load(BUDGETS_FILE)
-        print(
-            f"Loaded "
-            f"{len(budget_manager.get_all_budgets())} "
-            f"budget(s)."
-        )
+        print(f"Loaded " f"{len(budget_manager.get_all_budgets())} " f"budget(s).")
     except (OSError, ValueError) as error:
         print(f"Error loading budgets: {error}")
 
     # Run the interactive application
-    run_menu(
-        expenses,
-        budget_manager
-    )
+    run_menu(expenses, budget_manager)
 
     # Save all expenses when the user exits
     try:
-        save_expenses(
-            expenses,
-            DATA_FILE
-        )
-        print(
-            f"\n✅ Saved "
-            f"{len(expenses)} expense(s)."
-        )
+        save_expenses(expenses, DATA_FILE)
+        print(f"\n✅ Saved " f"{len(expenses)} expense(s).")
     except (OSError, TypeError) as error:
-        print(
-            f"\n❌ Error saving expenses: "
-            f"{error}"
-        )
+        print(f"\n❌ Error saving expenses: " f"{error}")
 
     # Save all budgets when the user exits
     try:
-        budget_manager.save(
-            BUDGETS_FILE
-        )
-        print(
-            f"✅ Saved "
-            f"{len(budget_manager.get_all_budgets())} "
-            f"budget(s)."
-        )
+        budget_manager.save(BUDGETS_FILE)
+        print(f"✅ Saved " f"{len(budget_manager.get_all_budgets())} " f"budget(s).")
     except (OSError, TypeError) as error:
-        print(
-            f"❌ Error saving budgets: "
-            f"{error}"
-        )
+        print(f"❌ Error saving budgets: " f"{error}")
 
 
 if __name__ == "__main__":

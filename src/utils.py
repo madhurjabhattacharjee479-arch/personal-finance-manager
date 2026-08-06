@@ -1,5 +1,6 @@
 from datetime import datetime
 from decimal import Decimal, InvalidOperation
+
 ALLOWED_CATEGORIES = {
     "food": "Food",
     "transport": "Transport",
@@ -7,6 +8,8 @@ ALLOWED_CATEGORIES = {
     "shopping": "Shopping",
     "other": "Other",
 }
+
+
 def validate_amount(value):
     """
     Validate and convert an expense amount to Decimal.
@@ -20,10 +23,14 @@ def validate_amount(value):
     try:
         amount = Decimal(str(value)).quantize(Decimal("0.01"))
     except (InvalidOperation, ValueError, TypeError) as error:
-        raise ValueError(f"Amount must be a valid number. Received: {value!r}") from error
+        raise ValueError(
+            f"Amount must be a valid number. Received: {value!r}"
+        ) from error
     if amount <= 0:
         raise ValueError(f"Amount must be greater than zero. Received: {value!r}")
     return amount
+
+
 def validate_date(value):
     """
     Validate a date string in YYYY-MM-DD format.
@@ -35,7 +42,9 @@ def validate_date(value):
         ValueError: If the date format is invalid or the date does not exist.
     """
     if not isinstance(value, str):
-        raise ValueError(f"Date must be a string in YYYY-MM-DD format. Received: {value!r}")
+        raise ValueError(
+            f"Date must be a string in YYYY-MM-DD format. Received: {value!r}"
+        )
     cleaned_date = value.strip()
     try:
         parsed_date = datetime.strptime(cleaned_date, "%Y-%m-%d")
@@ -44,6 +53,8 @@ def validate_date(value):
             f"Date must be a valid date in YYYY-MM-DD format. Received: {value!r}"
         ) from error
     return parsed_date.strftime("%Y-%m-%d")
+
+
 def validate_category(value):
     """
     Validate an expense category against the allowed list.
@@ -64,10 +75,10 @@ def validate_category(value):
     normalized_category = ALLOWED_CATEGORIES.get(cleaned_category.lower())
     if normalized_category is None:
         allowed = ", ".join(ALLOWED_CATEGORIES.values())
-        raise ValueError(
-            f"Invalid category: {value!r}. Allowed categories: {allowed}"
-        )
+        raise ValueError(f"Invalid category: {value!r}. Allowed categories: {allowed}")
     return normalized_category
+
+
 def validate_description(value):
     """
     Validate an expense description.

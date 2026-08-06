@@ -16,7 +16,7 @@ def main():
     # Valid expense
     expense = Expense(
         amount=45.50,
-        category="food",          # lowercase input
+        category="food",  # lowercase input
         date="2026-07-26",
         description="Lunch at cafe",
     )

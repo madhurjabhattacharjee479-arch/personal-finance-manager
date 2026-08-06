@@ -23,14 +23,10 @@ class Budget:
         try:
             month = int(month)
         except (ValueError, TypeError) as error:
-            raise ValueError(
-                "Month must be a valid number."
-            ) from error
+            raise ValueError("Month must be a valid number.") from error
 
         if not 1 <= month <= 12:
-            raise ValueError(
-                "Month must be between 1 and 12."
-            )
+            raise ValueError("Month must be between 1 and 12.")
 
         return month
 
@@ -40,14 +36,10 @@ class Budget:
         try:
             year = int(year)
         except (ValueError, TypeError) as error:
-            raise ValueError(
-                "Year must be a valid number."
-            ) from error
+            raise ValueError("Year must be a valid number.") from error
 
         if year < 2000:
-            raise ValueError(
-                "Year must be 2000 or later."
-            )
+            raise ValueError("Year must be 2000 or later.")
 
         return year
 
@@ -55,24 +47,15 @@ class Budget:
     def _validate_amount(amount):
         """Validate and convert budget amount to Decimal."""
         try:
-            amount = Decimal(str(amount)).quantize(
-                Decimal("0.01")
-            )
+            amount = Decimal(str(amount)).quantize(Decimal("0.01"))
         except (InvalidOperation, ValueError, TypeError) as error:
-            raise ValueError(
-                "Budget amount must be a valid number."
-            ) from error
+            raise ValueError("Budget amount must be a valid number.") from error
 
         if amount <= 0:
-            raise ValueError(
-                "Budget amount must be greater than zero."
-            )
+            raise ValueError("Budget amount must be greater than zero.")
 
         return amount
 
     def __str__(self):
         """Return a human-readable representation."""
-        return (
-            f"{self.year}-{self.month:02d} | "
-            f"Budget: {self.amount:.2f}"
-        )
+        return f"{self.year}-{self.month:02d} | " f"Budget: {self.amount:.2f}"

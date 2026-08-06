@@ -63,7 +63,10 @@ def test_budget_manager_remove_after_load(tmp_path):
     )
 
     assert removed is True
-    assert new_manager.get_budget(
-        7,
-        2026,
-    ) is None
+    assert (
+        new_manager.get_budget(
+            7,
+            2026,
+        )
+        is None
+    )

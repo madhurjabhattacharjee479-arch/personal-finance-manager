@@ -8,8 +8,11 @@ from src.reports import (
     category_summary,
     monthly_summary,
 )
+
 REPORTS_DIR = Path("reports")
 REPORTS_DIR.mkdir(exist_ok=True)
+
+
 def open_chart(file_path):
     """
     Open a generated chart using the default image viewer.
@@ -33,15 +36,12 @@ def open_chart(file_path):
 
     except Exception:
 
-        print(
-            "\nℹ️ Chart generated successfully."
-        )
+        print("\nℹ️ Chart generated successfully.")
 
-        print(
-            "Open it manually from:"
-        )
+        print("Open it manually from:")
 
-        print(file_path) 
+        print(file_path)
+
 
 def generate_category_pie_chart(expenses):
     """
@@ -80,7 +80,8 @@ def generate_category_pie_chart(expenses):
     plt.close()
     open_chart(output_file)
     print(f"\n✅ Pie chart saved to:\n{output_file}")
-    
+
+
 def generate_monthly_bar_chart(expenses, year):
     """
     Generate and save a monthly spending bar chart.
@@ -89,9 +90,18 @@ def generate_monthly_bar_chart(expenses, year):
     month_numbers = list(range(1, 13))
 
     month_names = [
-        "Jan", "Feb", "Mar", "Apr",
-        "May", "Jun", "Jul", "Aug",
-        "Sep", "Oct", "Nov", "Dec",
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "May",
+        "Jun",
+        "Jul",
+        "Aug",
+        "Sep",
+        "Oct",
+        "Nov",
+        "Dec",
     ]
 
     totals = []

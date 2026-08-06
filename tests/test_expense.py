@@ -1,14 +1,13 @@
-
 from decimal import Decimal
 
 import pytest
 
 from src.expense import Expense
 
-
 # ========================================
 # VALID EXPENSE TESTS
 # ========================================
+
 
 def test_create_valid_expense():
     expense = Expense(
@@ -53,6 +52,7 @@ def test_category_is_normalised():
 # INVALID AMOUNT TESTS
 # ========================================
 
+
 def test_invalid_amount_text():
     with pytest.raises(ValueError):
         Expense(
@@ -87,6 +87,7 @@ def test_invalid_amount_negative():
 # INVALID DATE TESTS
 # ========================================
 
+
 def test_invalid_date_format():
     with pytest.raises(ValueError):
         Expense(
@@ -110,6 +111,7 @@ def test_invalid_calendar_date():
 # ========================================
 # INVALID CATEGORY TESTS
 # ========================================
+
 
 def test_invalid_category():
     with pytest.raises(ValueError):
@@ -135,6 +137,7 @@ def test_empty_category():
 # INVALID DESCRIPTION TESTS
 # ========================================
 
+
 def test_empty_description():
     with pytest.raises(ValueError):
         Expense(
@@ -159,6 +162,7 @@ def test_whitespace_description():
 # STRING REPRESENTATION TEST
 # ========================================
 
+
 def test_expense_string_representation():
     expense = Expense(
         amount=45.50,
@@ -167,6 +171,4 @@ def test_expense_string_representation():
         description="Lunch at cafe",
     )
 
-    assert str(expense) == (
-        "2026-07-26 | Food | 45.50 | Lunch at cafe"
-    )
+    assert str(expense) == ("2026-07-26 | Food | 45.50 | Lunch at cafe")

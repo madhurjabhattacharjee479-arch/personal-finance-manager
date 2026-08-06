@@ -5,10 +5,10 @@ import pytest
 
 import src.config as config
 
-
 # ========================================
 # FORMAT MONEY TESTS
 # ========================================
+
 
 def test_format_money_inr():
     config.CURRENT_CURRENCY["code"] = "INR"
@@ -50,6 +50,7 @@ def test_format_money_gbp():
 # SAVE SETTINGS TESTS
 # ========================================
 
+
 def test_save_settings(tmp_path, monkeypatch):
     settings_file = tmp_path / "settings.json"
 
@@ -66,11 +67,7 @@ def test_save_settings(tmp_path, monkeypatch):
 
     assert settings_file.exists()
 
-    saved_data = json.loads(
-        settings_file.read_text(
-            encoding="utf-8"
-        )
-    )
+    saved_data = json.loads(settings_file.read_text(encoding="utf-8"))
 
     assert saved_data == {
         "code": "INR",
@@ -81,6 +78,7 @@ def test_save_settings(tmp_path, monkeypatch):
 # ========================================
 # LOAD SETTINGS TESTS
 # ========================================
+
 
 def test_load_settings_valid_currency(
     tmp_path,
@@ -195,6 +193,7 @@ def test_load_settings_corrupted_json(
 # CURRENCY VALIDATION TEST
 # ========================================
 
+
 def test_all_configured_currencies_are_valid():
     for code, symbol in config.CURRENCIES.values():
         assert isinstance(code, str)
@@ -206,6 +205,7 @@ def test_all_configured_currencies_are_valid():
 # ========================================
 # CHOOSE CURRENCY TESTS
 # ========================================
+
 
 def test_choose_currency_changes_to_usd(
     monkeypatch,
