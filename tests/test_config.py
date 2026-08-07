@@ -1,9 +1,7 @@
 import json
 from decimal import Decimal
 
-import pytest
-
-import src.config as config
+from src import config
 
 # ========================================
 # FORMAT MONEY TESTS

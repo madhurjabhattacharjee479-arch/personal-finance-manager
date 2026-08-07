@@ -1,7 +1,8 @@
-from pathlib import Path
 import os
-import sys
 import subprocess
+import sys
+from pathlib import Path
+
 import matplotlib.pyplot as plt
 
 from src.reports import (
@@ -19,27 +20,20 @@ def open_chart(file_path):
     """
 
     try:
-
         file_path = str(file_path)
 
         if sys.platform.startswith("win"):
-
             os.startfile(file_path)
 
         elif sys.platform == "darwin":
-
             subprocess.call(["open", file_path])
 
         else:
-
             subprocess.call(["xdg-open", file_path])
 
-    except Exception:
-
+    except OSError:
         print("\nℹ️ Chart generated successfully.")
-
         print("Open it manually from:")
-
         print(file_path)
 
 

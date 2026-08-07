@@ -1,12 +1,10 @@
-from datetime import datetime
+from datetime import datetime, timezone
 
 from src.charts import (
     generate_category_pie_chart,
     generate_monthly_bar_chart,
 )
-
 from src.config import format_money
-
 from src.reports import (
     calculate_total,
     category_summary,
@@ -21,7 +19,6 @@ def dashboard_menu(expenses, budget_manager):
     """
 
     while True:
-
         print("\n" + "=" * 50)
         print("         FINANCE DASHBOARD")
         print("=" * 50)
@@ -34,20 +31,16 @@ def dashboard_menu(expenses, budget_manager):
         choice = input("Enter your choice (1-4): ").strip()
 
         if choice == "1":
-
             display_dashboard(
                 expenses,
                 budget_manager,
             )
 
         elif choice == "2":
-
             generate_category_pie_chart(expenses)
 
         elif choice == "3":
-
             try:
-
                 year = int(input("Enter year (YYYY): ").strip())
 
                 generate_monthly_bar_chart(
@@ -56,17 +49,13 @@ def dashboard_menu(expenses, budget_manager):
                 )
 
             except ValueError:
-
                 print("\n❌ Please enter a valid year.")
 
         elif choice == "4":
-
             print("\nReturning to Main Menu...")
-
             break
 
         else:
-
             print("\n❌ Invalid choice.")
 
 
@@ -78,17 +67,13 @@ def get_dashboard(expenses, budget_manager):
     dashboard = {}
 
     dashboard["total_expenses"] = len(expenses)
-
     dashboard["total_spent"] = calculate_total(expenses)
 
     if expenses:
-
         dashboard["average_expense"] = (
             dashboard["total_spent"] / dashboard["total_expenses"]
         )
-
     else:
-
         dashboard["average_expense"] = 0
 
     dashboard["highest"] = find_highest_expense(expenses)
@@ -99,7 +84,6 @@ def get_dashboard(expenses, budget_manager):
     dashboard["category_count"] = len(summary)
 
     if summary:
-
         top_category = max(
             summary.items(),
             key=lambda item: item[1]["total"],
@@ -111,7 +95,6 @@ def get_dashboard(expenses, budget_manager):
         }
 
     else:
-
         dashboard["top_category"] = None
 
     dashboard["budgets"] = len(budget_manager.get_all_budgets())
@@ -133,20 +116,15 @@ def display_dashboard(expenses, budget_manager):
     print("             FINANCE DASHBOARD")
     print("=" * 50)
 
-    print(f"Total Expenses : " f"{dashboard['total_expenses']}")
-
-    print(f"Total Spent    : " f"{format_money(dashboard['total_spent'])}")
-
-    print(f"Average Expense: " f"{format_money(dashboard['average_expense'])}")
-
-    print(f"Categories     : " f"{dashboard['category_count']}")
-
-    print(f"Budgets Set    : " f"{dashboard['budgets']}")
+    print(f"Total Expenses : {dashboard['total_expenses']}")
+    print(f"Total Spent    : {format_money(dashboard['total_spent'])}")
+    print(f"Average Expense: {format_money(dashboard['average_expense'])}")
+    print(f"Categories     : {dashboard['category_count']}")
+    print(f"Budgets Set    : {dashboard['budgets']}")
 
     print("-" * 50)
 
     if dashboard["highest"]:
-
         print("Highest Expense")
         print(f"   {dashboard['highest']}")
 
@@ -156,69 +134,48 @@ def display_dashboard(expenses, budget_manager):
         print(f"   {dashboard['lowest']}")
 
     else:
-
         print("No expenses available.")
 
     print("-" * 50)
 
     if dashboard["top_category"]:
-
         print("Top Spending Category")
-
         print(f"   {dashboard['top_category']['name']}")
-
-        print(f"   Amount : " f"{format_money(dashboard['top_category']['amount'])}")
+        print(f"   Amount : {format_money(dashboard['top_category']['amount'])}")
 
     else:
-
         print("No category data.")
 
     print("-" * 50)
 
-    today = datetime.now()
+    today = datetime.now(timezone.utc).date()
 
-    try:
+    status = budget_manager.calculate_budget_status(
+        expenses,
+        today.month,
+        today.year,
+    )
 
-        status = budget_manager.calculate_budget_status(
-            expenses,
-            today.month,
-            today.year,
-        )
+    if status:
+        print("CURRENT MONTH BUDGET")
+        print(f"Budget      : {format_money(status['budget'])}")
+        print(f"Spent       : {format_money(status['spent'])}")
+        print(f"Remaining   : {format_money(status['remaining'])}")
+        print(f"Utilisation : {status['utilisation']:.2f}%")
 
-        if status:
+        if status["status"] == "OK":
+            print("Status      : ✅ Within Budget")
 
-            print("CURRENT MONTH BUDGET")
+        elif status["status"] == "WARNING":
+            print("Status      : ⚠ Near Budget Limit")
 
-            print(f"Budget      : " f"{format_money(status['budget'])}")
-
-            print(f"Spent       : " f"{format_money(status['spent'])}")
-
-            print(f"Remaining   : " f"{format_money(status['remaining'])}")
-
-            print(f"Utilisation : " f"{status['utilisation']:.2f}%")
-
-            if status["status"] == "OK":
-
-                print("Status      : ✅ Within Budget")
-
-            elif status["status"] == "WARNING":
-
-                print("Status      : ⚠ Near Budget Limit")
-
-            elif status["status"] == "EXCEEDED":
-
-                print("Status      : 🚨 Budget Exceeded")
-
-            else:
-
-                print(f"Status      : {status['status']}")
+        elif status["status"] == "EXCEEDED":
+            print("Status      : 🚨 Budget Exceeded")
 
         else:
+            print(f"Status      : {status['status']}")
 
-            print("No budget set for the current month.")
-
-    except Exception as error:
-
-        print(f"Unable to load budget status: {error}")
+    else:
+        print("No budget set for the current month.")
 
     print("=" * 50)

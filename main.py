@@ -1,9 +1,9 @@
 from pathlib import Path
 
+from src.budget_manager import BudgetManager
+from src.config import load_settings
 from src.file_manager import load_expenses, save_expenses
 from src.menu import run_menu
-from src.config import load_settings
-from src.budget_manager import BudgetManager
 
 DATA_FILE = Path("data/expenses.csv")
 BUDGETS_FILE = Path("data/budgets.json")

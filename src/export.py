@@ -3,8 +3,8 @@ import json
 from pathlib import Path
 
 from src.reports import (
-    calculate_total,
     calculate_average,
+    calculate_total,
     category_summary,
 )
 

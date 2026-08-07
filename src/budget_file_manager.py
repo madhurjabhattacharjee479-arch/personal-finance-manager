@@ -1,6 +1,6 @@
 import json
-from pathlib import Path
 from decimal import Decimal
+from pathlib import Path
 
 from src.budget import Budget
 
@@ -75,13 +75,13 @@ def load_budgets(filename=BUDGETS_FILE):
         raise OSError(f"Unable to read budgets from '{file_path}'.") from error
 
     if not isinstance(budget_data, list):
-        raise ValueError("Budget data must be stored as a JSON list.")
+        raise TypeError("Budget data must be stored as a JSON list.")
 
     budgets = []
 
     for index, data in enumerate(budget_data, start=1):
         if not isinstance(data, dict):
-            raise ValueError(f"Invalid budget data at item {index}.")
+            raise TypeError(f"Invalid budget data at item {index}.")
 
         try:
             month = data["month"]

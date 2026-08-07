@@ -1,5 +1,6 @@
 import csv
 from pathlib import Path
+
 from src.expense import Expense
 
 CSV_HEADER = ["Date", "Category", "Amount", "Description"]

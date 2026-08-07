@@ -1,5 +1,5 @@
-import shutil
 import csv
+import shutil
 from pathlib import Path
 
 DATA_FOLDER = Path("data")

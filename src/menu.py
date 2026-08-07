@@ -1,39 +1,37 @@
-from src import budget_manager
+from pathlib import Path
+
+from src.backup import (
+    create_backup,
+    restore_backup,
+)
+from src.budget import Budget
+from src.charts import (
+    generate_category_pie_chart,
+    generate_monthly_bar_chart,
+)
+from src.config import choose_currency, format_money
+from src.dashboard import dashboard_menu
 from src.expense import Expense
+from src.export import (
+    export_report,
+    export_to_csv,
+    export_to_json,
+)
+from src.file_manager import load_expenses
+from src.reports import (
+    calculate_average,
+    calculate_total,
+    category_summary,
+    find_highest_expense,
+    find_lowest_expense,
+    monthly_summary,
+)
 from src.utils import (
     validate_amount,
     validate_category,
     validate_date,
     validate_description,
 )
-from datetime import datetime
-
-from src.reports import (
-    calculate_total,
-    calculate_average,
-    category_summary,
-    monthly_summary,
-    find_highest_expense,
-    find_lowest_expense,
-)
-from src.config import format_money, choose_currency
-from src.budget import Budget
-from src.charts import (
-    generate_category_pie_chart,
-    generate_monthly_bar_chart,
-)
-from src.export import (
-    export_to_csv,
-    export_to_json,
-    export_report,
-)
-from src.backup import (
-    create_backup,
-    restore_backup,
-)
-from pathlib import Path
-from src.dashboard import dashboard_menu
-from src.file_manager import load_expenses
 
 DATA_FILE = Path("data/expenses.csv")
 BUDGETS_FILE = Path("data/budgets.json")
@@ -124,7 +122,9 @@ def add_expense(expenses, budget_manager):
     # ----------------------------------------
 
     try:
-        expense_date = datetime.strptime(expense.date, "%Y-%m-%d")
+        from datetime import datetime, timezone
+
+        expense_date = datetime.fromisoformat(expense.date).replace(tzinfo=timezone.utc)
 
         year = expense_date.year
         month = expense_date.month
@@ -138,37 +138,29 @@ def add_expense(expenses, budget_manager):
         if status is None:
             return
 
-        print(f"\n=== BUDGET STATUS: " f"{year:04d}-{month:02d} ===")
+        print(f"\n=== BUDGET STATUS: {year:04d}-{month:02d} ===")
 
-        print(f"Budget: " f"{format_money(status['budget'])}")
+        print(f"Budget: {format_money(status['budget'])}")
 
-        print(f"Spent: " f"{format_money(status['spent'])}")
+        print(f"Spent: {format_money(status['spent'])}")
 
-        print(f"Remaining: " f"{format_money(status['remaining'])}")
+        print(f"Remaining: {format_money(status['remaining'])}")
 
-        print(f"Budget utilisation: " f"{status['utilisation']:.2f}%")
+        print(f"Budget utilisation: {status['utilisation']:.2f}%")
 
         if status["status"] == "EXCEEDED":
-
             print("\n🚨 BUDGET EXCEEDED!")
-
-            print(
-                f"You are over budget by " f"{format_money(abs(status['remaining']))}."
-            )
+            print(f"You are over budget by {format_money(abs(status['remaining']))}.")
 
         elif status["status"] == "WARNING":
-
             print("\n⚠️ BUDGET WARNING!")
-
-            print("You have used 80% or more " "of your monthly budget.")
+            print("You have used 80% or more of your monthly budget.")
 
         else:
-
-            print("\n✅ Your spending is within " "your monthly budget.")
+            print("\n✅ Your spending is within your monthly budget.")
 
     except (ValueError, KeyError, TypeError) as error:
-
-        print(f"\n⚠️ Unable to check budget status: " f"{error}")
+        print(f"\n⚠️ Unable to check budget status: {error}")
 
 
 def view_expenses(expenses):
@@ -226,9 +218,8 @@ def search_expenses(expenses):
             if search_term.lower() in expense.description.lower():
                 matches.append(expense)
 
-        elif choice == "3":
-            if search_term == expense.date:
-                matches.append(expense)
+        elif choice == "3" and search_term == expense.date:
+            matches.append(expense)
 
     print("\n=== SEARCH RESULTS ===")
 

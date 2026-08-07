@@ -4,12 +4,12 @@ import pytest
 
 from src.expense import Expense
 from src.reports import (
-    calculate_total,
     calculate_average,
+    calculate_total,
     category_summary,
-    monthly_summary,
     find_highest_expense,
     find_lowest_expense,
+    monthly_summary,
 )
 
 # ========================================

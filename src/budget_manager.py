@@ -94,9 +94,7 @@ class BudgetManager:
 
         remaining = budget_amount - spent
 
-        utilisation = ((spent / budget_amount) * Decimal("100")).quantize(
-            Decimal("0.01")
-        )
+        utilisation = ((spent / budget_amount) * Decimal(100)).quantize(Decimal("0.01"))
 
         if spent > budget_amount:
             status = "EXCEEDED"
