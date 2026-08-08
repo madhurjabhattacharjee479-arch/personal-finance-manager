@@ -1,0 +1,33 @@
+flowchart TD
+    U[User] --> M[main.py]
+    M --> MENU[menu.py]
+
+    MENU --> E[Expense Management]
+    MENU --> B[Budget Management]
+    MENU --> R[Reports & Analytics]
+    MENU --> D[Dashboard]
+    MENU --> C[Charts]
+    MENU --> X[Export]
+    MENU --> BK[Backup & Restore]
+    MENU --> CFG[Currency Settings]
+
+    E --> V[utils.py validation]
+    E --> FM[file_manager.py]
+    FM --> CSV[(data/expenses.csv)]
+
+    B --> BM[budget_manager.py]
+    BM --> BFM[budget_file_manager.py]
+    BFM --> JSON[(data/budgets.json)]
+
+    R --> RP[reports.py]
+    D --> RP
+    C --> CH[charts.py]
+    CH --> RP
+    X --> EX[export.py]
+    EX --> RP
+
+    CFG --> CONFIG[config.py]
+    CONFIG --> SETTINGS[(data/settings.json)]
+
+    BK --> BACKUP[backup.py]
+    BACKUP --> BACKUPDIR[(backup/)]

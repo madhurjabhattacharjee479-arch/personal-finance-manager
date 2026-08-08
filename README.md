@@ -22,14 +22,6 @@ pip install -r requirements.txt
 python main.py
 ```
 
-## My overall assessment
-
-When we started, this was a coursework-style project. Through the refinements—clean documentation, proper testing, architecture diagrams, screenshots, Git hygiene, and a polished README—you've turned it into something that works well as a portfolio piece.
-
-I would rate it around **9.5/10** for an undergraduate portfolio project.
-
-The next step shouldn't be polishing this indefinitely. Put it on GitHub, include it on your resume, and start building a second project that's more advanced—something involving cybersecurity, networking, cloud security, or AI. Having two or three strong, varied projects will make a much bigger difference than trying to squeeze another 0.3 points out of this one.
-
 
 ## Overview
 
@@ -512,4 +504,3 @@ This project is licensed under the **MIT License**.
 See the [LICENSE](LICENSE) file for the complete license text.
 
 
-Improve README documentation

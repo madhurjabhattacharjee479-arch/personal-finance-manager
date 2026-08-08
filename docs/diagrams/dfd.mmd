@@ -1,0 +1,27 @@
+flowchart LR
+    U[User] --> UI[CLI Menu]
+
+    UI --> EXP[Expense Operations]
+    UI --> BUD[Budget Operations]
+    UI --> REP[Reports]
+    UI --> DASH[Dashboard]
+    UI --> CHART[Charts]
+    UI --> EXPORT[Export]
+    UI --> BACK[Backup/Restore]
+    UI --> SET[Settings]
+
+    EXP --> EDB[(expenses.csv)]
+    BUD --> BDB[(budgets.json)]
+    SET --> SDB[(settings.json)]
+
+    EDB --> REP
+    EDB --> DASH
+    EDB --> CHART
+    EDB --> EXPORT
+    BDB --> DASH
+    BDB --> REP
+
+    EXP --> BACK
+    BUD --> BACK
+    SET --> BACK
+    BACK --> BK[(backup/)]

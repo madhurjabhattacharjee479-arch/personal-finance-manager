@@ -1,0 +1,58 @@
+classDiagram
+    class Expense {
+        +Decimal amount
+        +str category
+        +str date
+        +str description
+        +__init__()
+        +__str__()
+    }
+
+    class Budget {
+        +int month
+        +int year
+        +Decimal amount
+        +__init__()
+        +__str__()
+        -_validate_month()
+        -_validate_year()
+        -_validate_amount()
+    }
+
+    class BudgetManager {
+        +budgets
+        +add_budget()
+        +remove_budget()
+        +get_budget()
+        +calculate_budget_status()
+        +get_all_budgets()
+        +save()
+        +load()
+    }
+
+    class FileManager {
+        +save_expenses()
+        +load_expenses()
+    }
+
+    class Reports {
+        +calculate_total()
+        +calculate_average()
+        +category_summary()
+        +monthly_summary()
+        +find_highest_expense()
+        +find_lowest_expense()
+    }
+
+    class Validation {
+        +validate_amount()
+        +validate_date()
+        +validate_category()
+        +validate_description()
+    }
+
+    BudgetManager --> Budget
+    FileManager --> Expense
+    Expense --> Validation
+    Reports --> Expense
+    BudgetManager --> Reports
