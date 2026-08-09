@@ -2,17 +2,27 @@
 
 ## 1. Overview
 
-Personal Finance Manager is a modular, menu-driven command-line application written in Python. The application separates user interaction, domain models, persistence, reporting, visualization, configuration, export, and backup responsibilities into independent modules.
+Personal Finance Manager is a modular, menu-driven command-line application written in Python.
+
+The application separates user interaction, expense and budget management, persistence, reporting, visualization, configuration, export, and backup responsibilities into independent modules.
 
 The application uses local file-based persistence:
 
 - `data/expenses.csv` stores expense records.
 - `data/budgets.json` stores monthly budgets.
-- `data/settings.json` stores the selected currency.
-- `backup/` stores backup copies of the application data.
-- `reports/` stores generated exports, reports, and chart images.
+- `data/settings.json` stores application settings such as currency.
+- `backup/` stores backup copies of application data.
+- `reports/` stores generated reports, exports, and chart images.
+
+The main application flow begins at `main.py`, which starts the menu system implemented in `menu.py`.
+
+---
 
 ## 2. High-Level Architecture
+
+The application follows a modular architecture in which the user interacts with the command-line menu and the menu delegates operations to specialized modules.
+
+The high-level flow is:
 
 ```text
 User
@@ -21,162 +31,474 @@ User
 main.py
   |
   v
-src.menu.run_menu()
+menu.py
   |
-  +--> Expense Management ----> Expense + Validation ----> expenses.csv
+  +--> Expense Management ----> utils.py --------> file_manager.py
+  |                                                    |
+  |                                                    v
+  |                                             expenses.csv
   |
-  +--> Budget Management ------> BudgetManager -----------> budgets.json
+  +--> Budget Management ------> budget_manager.py
+  |                                  |
+  |                                  v
+  |                           budget_file_manager.py
+  |                                  |
+  |                                  v
+  |                              budgets.json
   |
   +--> Reports & Analytics ----> reports.py
   |
   +--> Dashboard -------------> dashboard.py
+  |                                  |
+  |                                  v
+  |                              reports.py
   |
-  +--> Charts -----------------> charts.py ---------------> reports/*.png
+  +--> Charts -----------------> charts.py
+  |                                  |
+  |                                  v
+  |                              reports.py
+  |                                  |
+  |                                  v
+  |                            reports/*.png
   |
-  +--> Export -----------------> export.py ---------------> reports/*
+  +--> Export -----------------> export.py
+  |                                  |
+  |                                  v
+  |                              reports/*
   |
-  +--> Backup & Restore -------> backup.py --------------> backup/
+  +--> Backup & Restore -------> backup.py
+  |                                  |
+  |                                  v
+  |                               backup/
   |
-  +--> Currency Settings ------> config.py --------------> settings.json
+  +--> Currency Settings ------> config.py
+                                     |
+                                     v
+                                settings.json 
 ```
+---
+## 3. Architectural Layers
 
-## 3. Module Responsibilities
+The project can be viewed as several logical layers.
 
-| Module | Responsibility |
-|---|---|
-| `main.py` | Application entry point; loads data, starts the menu, and saves data on exit |
-| `menu.py` | Interactive command-line menus and user workflows |
-| `expense.py` | `Expense` domain model and expense validation integration |
-| `budget.py` | `Budget` domain model and budget field validation |
-| `budget_manager.py` | Budget collection management and budget-status calculations |
-| `file_manager.py` | CSV persistence for expenses |
-| `budget_file_manager.py` | JSON persistence for budgets |
-| `utils.py` | Validation for amounts, dates, categories, and descriptions |
-| `reports.py` | Spending totals, averages, category summaries, monthly summaries, highest/lowest expense |
-| `dashboard.py` | Consolidated financial dashboard |
-| `charts.py` | Matplotlib category and monthly charts |
-| `export.py` | CSV, JSON, and text report exports |
-| `backup.py` | Backup creation and restoration |
-| `config.py` | Currency configuration and settings persistence |
+### 3.1 Presentation Layer
 
-## 4. Core Data Models
+The presentation layer handles interaction with the user.
 
-### Expense
+Main components:
 
-The `Expense` class contains:
+main.py
+menu.py
+dashboard.py
 
-- `amount`
-- `category`
-- `date`
-- `description`
+Responsibilities include:
 
-Amounts are represented as `Decimal` values rounded to two decimal places. Categories are normalized to the application's standard capitalization.
+Starting the application.
+Displaying menus.
+Receiving user input.
+Calling appropriate application functionality.
+Displaying results and errors.
 
-### Budget
+### 3.2 Domain Layer
 
-The `Budget` class contains:
+The domain layer contains the application's core financial objects and business logic.
 
-- `month`
-- `year`
-- `amount`
+Main components:
 
-The model validates month, year, and amount values before accepting them.
+expense.py
+budget.py
+budget_manager.py
 
-### BudgetManager
+Responsibilities include:
 
-`BudgetManager` maintains the collection of budgets and provides:
+Representing expenses.
+Representing budgets.
+Validating domain data.
+Managing collections of budgets.
+Calculating budget status.
 
-- add
-- remove
-- lookup
-- list
-- save/load
-- budget-status calculation
+### 3.3 Validation Layer
 
-## 5. Persistence
+The validation logic is centralized in:
 
-### Expenses
+utils.py
 
-Expenses are serialized to CSV using Python's standard `csv` module. Loading reconstructs `Expense` objects, so validation is applied to persisted records as well.
+It validates:
 
-### Budgets
+expense amounts
+dates
+categories
+descriptions
 
-Budgets are stored as JSON and loaded into `Budget` objects.
+Validation is applied both when users enter data and when persisted records are loaded.
 
-### Settings
+### 3.4 Persistence Layer
 
-Currency settings are stored as JSON. The application supports configured currencies including INR, USD, EUR, and GBP.
+The application uses local files instead of a database.
 
-## 6. Reporting and Analytics
+Main components:
 
-The reporting layer operates on the in-memory list of `Expense` objects.
+file_manager.py
+budget_file_manager.py
+config.py
+
+Storage formats:
+
+Data	File	Format
+Expenses	data/expenses.csv	CSV
+Budgets	data/budgets.json	JSON
+Settings	data/settings.json	JSON
+
+This approach keeps the application simple, portable, and easy to inspect.
+
+### 3.5 Reporting and Visualization Layer
+
+Reporting and visualization are handled by:
+
+reports.py
+dashboard.py
+charts.py
+
+reports.py performs calculations on expense data.
+
+dashboard.py combines important financial information into a consolidated view.
+
+charts.py uses Matplotlib to generate visual representations of financial data.
+
+### 3.6 Export Layer
+
+export.py provides functionality for exporting financial information.
+
+Supported formats include:
+
+CSV
+JSON
+text reports
+
+Generated files are stored under the reports/ directory.
+
+### 3.7 Backup Layer
+
+backup.py manages backup and restoration of application data.
+
+Backup files are stored under:
+
+backup/
+
+The restore functionality can replace current application data with previously backed-up data after user confirmation.
+
+## 4. Module Responsibilities
+
+Module	Responsibility
+
+main.py               	Application entry point and application startup/shutdown flow
+menu.py	                Interactive command-line menus and user workflows
+expense.py      	      Expense domain model
+budget.py	              Budget domain model and budget validation
+budget_manager.py	      Budget collection management and budget-status calculations
+file_manager.py	        CSV persistence for expenses
+budget_file_manager.py	JSON persistence for budgets
+utils.py              	Validation of amounts, dates, categories, and descriptions
+reports.py	            Financial calculations and summaries
+dashboard.py           	Consolidated financial dashboard
+charts.py	              Generation of financial charts using Matplotlib
+export.py              	Export of financial data and reports
+backup.py             	Backup and restoration of application data
+config.py             	Currency and application settings management
+
+## 5. Core Data Models
+### 5.1 Expense
+
+The Expense class represents an individual financial expense.
+
+It contains:
+
+amount
+category
+date
+description
+
+The amount is represented using Python's Decimal type and is rounded to two decimal places.
+
+Categories are normalized to the application's standard capitalization.
+
+Example categories include:
+
+Food
+Transport
+Entertainment
+Shopping
+Other
+
+### 5.2 Budget
+
+The Budget class represents a monthly spending budget.
+
+It contains:
+
+month
+year
+amount
+
+The class validates the month, year, and amount before accepting the values.
+
+### 5.3 BudgetManager
+
+BudgetManager maintains a collection of budgets.
+
+Its responsibilities include:
+
+Adding budgets.
+Removing budgets.
+Looking up budgets.
+Listing budgets.
+Saving budgets.
+Loading budgets.
+Calculating budget status.
+
+Budget status is determined by comparing the selected monthly budget with actual spending.
+
+## 6. Validation
+
+Validation is centralized in utils.py.
+
+The following validation functions are provided:
+
+validate_amount()
+
+Validates expense amounts and converts valid values into Decimal values rounded to two decimal places.
+
+Invalid values such as:
+
+non-numeric input
+zero
+negative values
+
+are rejected.
+
+validate_date()
+
+Validates dates using the YYYY-MM-DD representation.
+
+Invalid formats and invalid calendar dates are rejected.
+
+validate_category()
+
+Validates expense categories against the application's allowed category list.
+
+Category matching is case-insensitive and valid categories are normalized to standard capitalization.
+
+validate_description()
+
+Ensures that descriptions are non-empty after removing surrounding whitespace.
+
+## 7. Persistence
+## 7.1 Expense Persistence
+
+Expenses are stored in:
+
+data/expenses.csv
+
+The application uses Python's standard csv module for persistence.
+
+When expenses are loaded from the CSV file, they are reconstructed as Expense objects. This means validation is also applied to persisted records.
+
+## 7.2 Budget Persistence
+
+Budgets are stored in:
+
+data/budgets.json
+
+The budget file manager handles serialization and deserialization of budget information.
+
+Loaded records are reconstructed as Budget objects.
+
+### 7.3 Settings Persistence
+
+Application settings are stored in:
+
+data/settings.json
+
+The settings system supports configured currencies including:
+
+INR
+USD
+EUR
+GBP
+
+## 8. Reporting and Analytics
+
+The reporting layer operates on the application's in-memory expense collection.
 
 Implemented calculations include:
 
-- total spending
-- average expense
-- category-wise count, total, and average
-- monthly spending
-- highest expense
-- lowest expense
+Total spending.
+Average expense.
+Category-wise expense count.
+Category-wise spending total.
+Category-wise average.
+Monthly spending.
+Highest expense.
+Lowest expense.
 
-Monthly reports match the validated `YYYY-MM-DD` expense date representation.
+Monthly calculations use the validated YYYY-MM-DD expense date representation.
 
-## 7. Budget Status
+## 9. Budget Status
 
-`BudgetManager.calculate_budget_status()` compares monthly spending against the selected monthly budget.
+BudgetManager.calculate_budget_status() compares monthly spending with the configured monthly budget.
 
 The resulting status can represent:
 
-- normal/safe spending
-- `WARNING` when 80% or more of the budget has been used
-- `EXCEEDED` when spending is greater than the budget
+Safe or normal spending.
+WARNING when 80% or more of the budget has been used.
+EXCEEDED when spending is greater than the budget.
 
-The dashboard and reports menus expose this information to the user.
+Budget status information is exposed through the dashboard and reporting functionality.
 
-## 8. Visualization
+## 10. Dashboard
 
-`charts.py` uses Matplotlib to generate:
+dashboard.py provides a consolidated financial overview.
 
-- category-wise pie charts
-- monthly spending bar charts
+The dashboard uses information produced by the reporting layer and presents important financial metrics to the user.
 
-Generated chart files are written to the `reports/` directory.
+This allows the user to view financial information without manually calculating totals or summaries.
 
-## 9. Export
+## 11. Visualization
 
-The export module supports:
+charts.py uses Matplotlib to generate financial visualizations.
 
-- CSV expense export
-- JSON expense export
-- text finance report export
-- exporting all supported formats from one menu option
+The application supports charts such as:
 
-## 10. Backup and Restore
+Category-wise spending pie charts.
+Monthly spending bar charts.
 
-The backup module copies the main application data files into `backup/`.
+Generated chart files are stored in:
 
-Restore operations overwrite the current data after user confirmation and reload expenses and budgets into the running application.
+reports/
 
-## 11. Complexity
+The charting module uses the reporting functionality to obtain the required financial summaries.
 
-The application uses in-memory lists and file-based storage. Dominant operations are generally linear in the number of expense records:
+## 12. Export
 
-| Operation | Complexity |
-|---|---|
-| Add expense to collection | O(1) |
-| View expenses | O(n) |
-| Search expenses | O(n) |
-| Edit expense | O(n) |
-| Delete expense | O(n) |
-| Category summary | O(n) |
-| Monthly summary | O(n) |
-| Export | O(n) |
+export.py provides data and report export functionality.
 
-This architecture is appropriate for a personal finance application with small-to-medium local datasets. A database and indexed queries would be more appropriate for substantially larger datasets.
+Supported export formats include:
 
-## 12. Design Rationale
+CSV
 
-The project deliberately uses simple local persistence instead of a database. This keeps the application portable, transparent, and easy to inspect for a coursework/portfolio setting.
+Used for structured tabular expense data.
 
-The modular structure also allows individual components to be tested independently and makes future migration to database-backed storage or a GUI/API easier.
+JSON
+
+Used for structured machine-readable expense data.
+
+Text
+
+Used for human-readable financial reports.
+
+Exported files are stored in the reports/ directory.
+
+## 13. Backup and Restore
+
+The backup system is implemented in backup.py.
+
+Application data can be copied into:
+
+backup/
+
+The restore process can restore backed-up application data to the active data directory.
+
+Restoration overwrites the current data after user confirmation.
+
+After restoration, the application reloads the relevant expense and budget data.
+
+## 14. Error Handling
+
+The application includes input validation and error handling for user-provided data.
+
+Examples include:
+
+Invalid expense amounts.
+Negative or zero amounts.
+Invalid dates.
+Invalid categories.
+Empty descriptions.
+Invalid budget values.
+Invalid menu selections.
+File-related errors.
+
+Validation errors are handled before invalid data is accepted into the application's core data structures.
+
+## 15. Complexity
+
+The application primarily uses in-memory lists and local file-based storage.
+
+The dominant operations are generally linear in the number of expense records.
+
+Operation	Complexity
+Add expense to collection	O(1)
+View expenses	O(n)
+Search expenses	O(n)
+Edit expense	O(n)
+Delete expense	O(n)
+Category summary	O(n)
+Monthly summary	O(n)
+Export	O(n)
+
+Here, n represents the number of expense records.
+
+The architecture is appropriate for a personal finance application with small-to-medium local datasets.
+
+For substantially larger datasets, database-backed storage and indexed queries would be more appropriate.
+
+## 16. Design Rationale
+
+The project deliberately uses simple local file-based persistence instead of a database.
+
+This provides several advantages for the project's intended use:
+
+Simple setup.
+No external database server.
+Portable application data.
+Transparent data storage.
+Easy inspection and debugging.
+Suitable for a coursework and portfolio project.
+
+The modular architecture separates responsibilities between components.
+
+For example:
+
+Validation is centralized in utils.py.
+Expense persistence is handled by file_manager.py.
+Budget persistence is handled by budget_file_manager.py.
+Financial calculations are handled by reports.py.
+Visualization is handled by charts.py.
+Backup functionality is isolated in backup.py.
+
+This separation makes individual modules easier to test and maintain.
+
+It also provides a foundation for future migration to database-backed storage, a graphical user interface, or an API without requiring the entire application to be rewritten.
+
+## 17. Architecture Diagram
+
+The visual architecture diagram for this documentation is maintained separately as a Mermaid file:
+
+docs/
+└── diagrams/
+    └── architecture.mmd
+
+The .mmd file contains the Mermaid source used to render the architecture diagram.
+
+The Markdown document describes the architecture, while the .mmd file provides its graphical representation.
+
+## 18. Related Documentation
+
+Additional project documentation is available in:
+
+docs/user-guide.md — instructions for using the application.
+docs/developer-guide.md — development and contribution information.
+docs/testing.md — testing strategy and test execution.
+docs/diagrams/architecture.mmd — high-level architecture diagram.
+docs/diagrams/class-diagram.mmd — class relationships.
+docs/diagrams/dfd.mmd — data flow diagram.
+docs/diagrams/sequence-diagram.mmd — application interaction sequence.
