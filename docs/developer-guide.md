@@ -98,7 +98,7 @@ tests/
 ├── test_budget_manager.py
 ├── test_config.py
 ├── test_expense.py
-├── test_expense_validation.py
+├── test_expense_validation.py    # Standalone validation demonstration
 ├── test_file_manager.py
 ├── test_reports.py
 └── test_utils.py
